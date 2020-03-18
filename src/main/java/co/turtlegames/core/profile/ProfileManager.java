@@ -21,22 +21,27 @@ public class ProfileManager extends TurtleModule {
     private DatabaseConnector _dbConnector;
 
     private Cache<UUID, PlayerProfile> _profileCache;
+    private Cache<UUID, CompletableFuture<PlayerProfile>> _futureCache;
 
     public ProfileManager(TurtleCore pluginInstance) {
 
         super(pluginInstance, "Profile Manager");
 
         _profileCache = CacheBuilder.newBuilder()
-                            .expireAfterWrite(5, TimeUnit.MINUTES)
+                            .expireAfterWrite(1, TimeUnit.MINUTES)
                             .expireAfterAccess(15, TimeUnit.MINUTES)
                                 .build();
+
+        _futureCache = CacheBuilder.newBuilder()
+                .expireAfterWrite(25, TimeUnit.SECONDS)
+                .build();
+
+        _dbConnector = this.getDatabaseConnector();
 
     }
 
     @Override
     public void initializeModule() {
-
-        _dbConnector = this.getDatabaseConnector();
 
         this.registerListener(new ProfilePreCacheListener(this));
 
@@ -50,13 +55,8 @@ public class ProfileManager extends TurtleModule {
 
         if(cachedProfile != null) {
 
-            if (cachedProfile == ProfileManager.LOADING) {
-
-                response.completeExceptionally(
-                        new DatabaseException(DatabaseException.FailureType.FETCH_IN_PROGRESS, "Fetch already in progress"));
-                return response;
-
-            }
+            if (cachedProfile == ProfileManager.LOADING)
+                return _futureCache.getIfPresent(uuid);
 
             response.complete(cachedProfile);
             return response;
@@ -64,6 +64,7 @@ public class ProfileManager extends TurtleModule {
         }
 
         _profileCache.put(uuid, ProfileManager.LOADING);
+        _futureCache.put(uuid, response);
 
         FetchPlayerDataAction fetchPlayerData = new FetchPlayerDataAction(uuid);
 
@@ -88,7 +89,9 @@ public class ProfileManager extends TurtleModule {
                     createDataFuture.exceptionally((Throwable throwable) -> {
 
                         response.completeExceptionally(throwable);
+
                         _profileCache.invalidate(uuid);
+                        _futureCache.invalidate(uuid);
 
                         return null;
 
@@ -106,6 +109,7 @@ public class ProfileManager extends TurtleModule {
                         PlayerProfile newProfile = new PlayerProfile(this, uuid);
 
                         _profileCache.put(uuid, newProfile);
+                        _futureCache.invalidate(uuid);
 
                         response.complete(newProfile);
 
@@ -118,6 +122,8 @@ public class ProfileManager extends TurtleModule {
             }
 
             _profileCache.invalidate(uuid);
+            _futureCache.invalidate(uuid);
+
             response.completeExceptionally(ex);
 
             return null;

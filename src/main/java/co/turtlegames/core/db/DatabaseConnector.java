@@ -50,17 +50,17 @@ public class DatabaseConnector {
 
         CompletableFuture<I> toComplete = new CompletableFuture<I>();
 
-        Connection con;
-        try {
-            con = _conPool.getConnection();
-        } catch(SQLException ex) {
-
-            toComplete.completeExceptionally(ex);
-            return toComplete;
-
-        }
-
         Bukkit.getScheduler().runTaskAsynchronously(_pluginInstance, () -> {
+
+            Connection con;
+            try {
+                con = _conPool.getConnection();
+            } catch(SQLException ex) {
+
+                toComplete.completeExceptionally(ex);
+                return;
+
+            }
 
             try {
 
