@@ -5,6 +5,7 @@ import co.turtlegames.core.db.DatabaseConnector;
 import co.turtlegames.core.infraction.InfractionManager;
 import co.turtlegames.core.profile.ProfileManager;
 import co.turtlegames.core.recharge.RechargeManager;
+import co.turtlegames.core.scoreboard.TurtleScoreboardManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -42,6 +43,7 @@ public class TurtleCore extends JavaPlugin {
         this.registerModule(new ChatManager(this));
         this.registerModule(new InfractionManager(this));
         this.registerModule(new RechargeManager(this));
+        this.registerModule(new TurtleScoreboardManager(this));
 
         this.initializeModules();
 
