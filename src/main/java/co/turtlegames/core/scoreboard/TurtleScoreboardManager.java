@@ -75,4 +75,10 @@ public class TurtleScoreboardManager extends TurtleModule {
         _sbMap.remove(player.getUniqueId());
     }
 
+    public void pokeAllTeamData(Player player) {
+
+        for(TurtlePlayerScoreboard scoreboard : _sbMap.values())
+            scoreboard.promptLoadTeamData(player);
+
+    }
 }

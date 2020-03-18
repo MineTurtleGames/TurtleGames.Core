@@ -16,6 +16,7 @@ public class DefaultScoreboardView extends ScoreboardView {
         scoreboard.setTitle(ChatColor.DARK_GREEN + ChatColor.BOLD.toString() + "TurtleGames");
 
         scoreboard.setLine(0, ChatColor.RED + "Jerry");
+        scoreboard.setLine(14, ChatColor.GREEN + "www.turtlegames.co");
 
     }
 

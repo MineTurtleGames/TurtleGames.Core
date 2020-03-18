@@ -18,6 +18,8 @@ public class ScoreboardPlayerJoinListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
 
+        _scoreboardManager.pokeAllTeamData(event.getPlayer());
+
         // load scoreboard
         TurtlePlayerScoreboard playerScoreboard = _scoreboardManager.getScoreboard(event.getPlayer());
 
