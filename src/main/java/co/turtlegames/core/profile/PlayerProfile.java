@@ -1,13 +1,18 @@
 package co.turtlegames.core.profile;
 
+import co.turtlegames.core.achievement.AchievementData;
+import co.turtlegames.core.achievement.AchievementManager;
 import co.turtlegames.core.infraction.InfractionData;
 import co.turtlegames.core.infraction.InfractionManager;
+import co.turtlegames.core.profile.action.AddXpAction;
 import co.turtlegames.core.profile.action.FetchPlayerDataAction;
+import co.turtlegames.core.profile.action.UpdateProfileRankAction;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 public class PlayerProfile {
 
@@ -18,6 +23,7 @@ public class PlayerProfile {
     private long _xp;
 
     private InfractionData _infractionData = null;
+    private AchievementData _achievementData = null;
 
     public PlayerProfile(ProfileManager profileManager, FetchPlayerDataAction.PlayerData data) {
 
@@ -99,8 +105,88 @@ public class PlayerProfile {
 
     }
 
+    public CompletableFuture<Boolean> updateRank(Rank rank) {
+
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+        UpdateProfileRankAction updateRank = new UpdateProfileRankAction(_owner, rank);
+        CompletableFuture<Boolean> updateFuture = _profileManager.getDatabaseConnector().executeActionAsync(updateRank);
+
+        updateFuture.thenAccept((Boolean success) -> {
+
+            if(!success) {
+                future.completeExceptionally(new Exception("jeff"));
+                return;
+            }
+
+            _rank = rank;
+            future.complete(true);
+
+        });
+
+        updateFuture.exceptionally((Throwable ex) -> {
+
+            future.completeExceptionally(ex);
+            return null;
+
+        });
+
+        return future;
+
+    }
+
+    public CompletableFuture<Boolean> addXp(long amount) {
+
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+        AddXpAction xpAction = new AddXpAction(_owner, amount);
+        CompletableFuture<Long> addFuture = _profileManager.getDatabaseConnector()
+                                                    .executeActionAsync(xpAction);
+
+        addFuture.thenAccept((Long newXp) -> {
+
+            _xp = newXp;
+            future.complete(true);
+
+        });
+
+        addFuture.exceptionally((Throwable ex) -> {
+
+            future.completeExceptionally(ex);
+            return null;
+
+        });
+
+        return future;
+
+    }
+
     public boolean canConnect() {
         return true;
     }
 
+    public CompletableFuture<AchievementData> fetchAchievementData() {
+
+        CompletableFuture<AchievementData> future = new CompletableFuture<AchievementData>();
+        AchievementManager achievementManager = _profileManager.getModule(AchievementManager.class);
+
+        CompletableFuture<AchievementData> achievementDataFuture = achievementManager.fetchAchievementData(_owner);
+
+        achievementDataFuture.thenAccept((AchievementData data) -> {
+
+            _achievementData = data;
+            future.complete(data);
+
+        });
+
+        achievementDataFuture.exceptionally((Throwable ex) -> {
+
+            future.completeExceptionally(ex);
+            return null;
+
+        });
+
+        return future;
+
+    }
 }

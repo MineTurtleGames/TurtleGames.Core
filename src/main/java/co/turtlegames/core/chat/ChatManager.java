@@ -4,6 +4,7 @@ import co.turtlegames.core.TurtleModule;
 import co.turtlegames.core.chat.command.SilenceCommand;
 import co.turtlegames.core.chat.listeners.ChatFilterListener;
 import co.turtlegames.core.chat.listeners.ChatHandleListener;
+import co.turtlegames.core.chat.listeners.ChatMiscListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ChatManager extends TurtleModule {
@@ -20,6 +21,7 @@ public class ChatManager extends TurtleModule {
 
         this.registerListener(new ChatHandleListener(this));
         this.registerListener(new ChatFilterListener(this));
+        this.registerListener(new ChatMiscListener(this));
 
         this.registerCommand(new SilenceCommand(this));
 

@@ -23,16 +23,4 @@ public class ChatFilterListener implements Listener {
 
     }
 
-    @EventHandler
-    public void onChat(CoreChatEvent ev) {
-
-        if(ev.getMessage().contains("gary")) {
-
-            _chatManager.getModule(InfractionManager.class)
-                    .registerInfraction(new Infraction(ev.getSender().getOwnerUuid(), UUID.randomUUID(), InfractionType.WARN, System.currentTimeMillis(), 1000));
-
-        }
-
-    }
-
 }

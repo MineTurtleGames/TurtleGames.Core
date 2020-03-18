@@ -1,11 +1,14 @@
 package co.turtlegames.core.menu;
 
+import co.turtlegames.core.TurtleModule;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,24 +17,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
-public abstract class Menu implements Listener {
+public abstract class Menu<ModuleType extends TurtleModule> implements Listener {
 
-    private JavaPlugin _hostPlugin;
+    private ModuleType _module;
     private WeakReference<Player> _owner;
 
     private Inventory _inventory;
 
     private String _title;
-    private Stack<Page> _pageStack;
+    private Stack<Page<? extends Menu>> _pageStack;
 
     private HashMap<Integer, IButtonCallback> _activeCallbacks;
 
-    public Menu(JavaPlugin hostPlugin, String title, Player owner) {
+    public Menu(ModuleType module, String title, Player owner) {
 
-        _hostPlugin.getServer().getPluginManager().registerEvents(this, _hostPlugin);
+        module.getPlugin().getServer().getPluginManager().registerEvents(this, module.getPlugin());
 
-        _hostPlugin = hostPlugin;
-        _owner = new WeakReference(owner);
+        _module = module;
+        _owner = new WeakReference<Player>(owner);
 
         _inventory = Bukkit.createInventory(owner, 54, title);
 
@@ -40,6 +43,14 @@ public abstract class Menu implements Listener {
 
         _activeCallbacks = new HashMap<>();
 
+    }
+
+    public WeakReference<Player> getOwner() {
+        return _owner;
+    }
+
+    public ModuleType getModule() {
+        return _module;
     }
 
     public void open() {
@@ -86,14 +97,34 @@ public abstract class Menu implements Listener {
 
     }
 
+    protected void addPage(Page<? extends Menu> page) {
+
+        _pageStack.add(page);
+
+    }
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
 
-        if (event.getClickedInventory() == _inventory) {
+        if (event.getView().getTopInventory().equals(_inventory))
+            event.setCancelled(true);
+
+        if (event.getClickedInventory().equals(_inventory)) {
 
             if (_activeCallbacks.containsKey(event.getSlot())) {
                 _activeCallbacks.get(event.getSlot()).onClick(_pageStack.peek(), event);
             }
+
+        }
+
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+
+        if (event.getView().getTopInventory().equals(_inventory)) {
+
+            HandlerList.unregisterAll(this);
 
         }
 

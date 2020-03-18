@@ -3,6 +3,7 @@ package co.turtlegames.core.infraction;
 import co.turtlegames.core.TurtleCore;
 import co.turtlegames.core.TurtleModule;
 import co.turtlegames.core.common.Chat;
+import co.turtlegames.core.infraction.command.PunishCommand;
 import co.turtlegames.core.profile.PlayerProfile;
 import co.turtlegames.core.profile.ProfileManager;
 import co.turtlegames.core.db.DatabaseConnector;
@@ -34,6 +35,8 @@ public class InfractionManager extends TurtleModule  {
     public void initializeModule() {
 
         _dbConnector = this.getDatabaseConnector();
+
+        this.registerCommand(new PunishCommand(this));
 
     }
 
@@ -125,7 +128,7 @@ public class InfractionManager extends TurtleModule  {
                         + Chat.elem(infraction.getType().getName())
                         + " with duration "
                         + Chat.elem("" + UtilString.formatTime(infraction.getDuration()))
-                        + "\n\nReason: " + Chat.elem("doggy")));
+                        + "\n\nReason: " + Chat.elem(infraction.getReason())));
 
         ply.playSound(ply.getLocation(), Sound.CHICKEN_EGG_POP, 1, 1);
 

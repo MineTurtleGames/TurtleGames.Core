@@ -2,12 +2,17 @@ package co.turtlegames.core.scoreboard.views;
 
 import co.turtlegames.core.scoreboard.ScoreboardView;
 import co.turtlegames.core.scoreboard.TurtlePlayerScoreboard;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class DefaultScoreboardView extends ScoreboardView {
 
     public DefaultScoreboardView() {
+
         super("Default");
+
     }
 
     @Override
@@ -22,6 +27,8 @@ public class DefaultScoreboardView extends ScoreboardView {
 
     @Override
     public void updateBoard(TurtlePlayerScoreboard scoreboard) {
+
+        scoreboard.setLine(1, "" + ThreadLocalRandom.current().nextInt(1000));
 
     }
 }

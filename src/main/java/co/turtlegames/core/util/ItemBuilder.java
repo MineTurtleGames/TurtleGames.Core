@@ -2,8 +2,11 @@ package co.turtlegames.core.util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
 
 import java.util.Arrays;
 
@@ -36,7 +39,7 @@ public class ItemBuilder {
 
     public ItemBuilder setData(byte data) {
 
-        _item.getData().setData(data);
+        _item.setDurability(data);
         return this;
 
     }
@@ -45,6 +48,26 @@ public class ItemBuilder {
 
         ItemMeta meta = _item.getItemMeta();
         meta.setLore(Arrays.asList(lore));
+        _item.setItemMeta(meta);
+
+        return this;
+
+    }
+
+    public ItemBuilder hideEnchants() {
+
+        ItemMeta meta = _item.getItemMeta();
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        _item.setItemMeta(meta);
+
+        return this;
+
+    }
+
+    public ItemBuilder glow() {
+
+        ItemMeta meta = _item.getItemMeta();
+        meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, false);
         _item.setItemMeta(meta);
 
         return this;

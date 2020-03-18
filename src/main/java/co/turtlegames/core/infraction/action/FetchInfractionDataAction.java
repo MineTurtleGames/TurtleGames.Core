@@ -37,7 +37,7 @@ public class FetchInfractionDataAction implements IDatabaseAction<Collection<Inf
                     UUID.fromString(rs.getString("issuer_uuid")),
                     InfractionType.valueOf(rs.getString("type")),
                     rs.getLong("issue_time"),
-                    rs.getLong("length")));
+                    rs.getLong("length"), rs.getString("reason")));
 
         }
 

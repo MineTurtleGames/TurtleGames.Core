@@ -38,6 +38,10 @@ public class TurtleScoreboardManager extends TurtleModule {
 
         }
 
+        Bukkit.getScheduler().runTaskTimer(this.getPlugin(), () -> {
+            this.updateAll();
+        },10,10);
+
     }
 
     public TurtlePlayerScoreboard getScoreboard(Player ply) {

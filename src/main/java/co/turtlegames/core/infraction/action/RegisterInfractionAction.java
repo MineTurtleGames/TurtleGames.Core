@@ -30,7 +30,7 @@ public class RegisterInfractionAction implements IDatabaseAction<Boolean> {
         statement.setLong(4, _toRegister.getIssueEpoch());
         statement.setLong(5, _toRegister.getDuration());
 
-        statement.setString(6, "Jerry");
+        statement.setString(6, _toRegister.getReason());
 
         statement.execute();
         return true;

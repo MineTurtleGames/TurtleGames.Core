@@ -2,6 +2,7 @@ package co.turtlegames.core.recharge;
 
 import co.turtlegames.core.TurtleModule;
 import co.turtlegames.core.common.Chat;
+import co.turtlegames.core.util.UtilString;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,7 +37,7 @@ public class RechargeManager extends TurtleModule {
 
         if (notify) {
 
-            Bukkit.getScheduler().runTaskLater(getPlugin(), new BukkitRunnable() {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(getPlugin(), new Runnable() {
 
                 @Override
                 public void run() {
@@ -73,10 +74,9 @@ public class RechargeManager extends TurtleModule {
 
         }
 
-        // TODO format
-        long waitTime = System.currentTimeMillis() - token.getFinishTime();
+        String waitTime = UtilString.formatTime(System.currentTimeMillis() - token.getFinishTime());
 
-        player.sendMessage(Chat.main(getName(), "You need to wait " + Chat.elem(waitTime + "") + " before you can use " + Chat.elem(key) + " again."));
+        player.sendMessage(Chat.main(getName(), "You need to wait " + Chat.elem(waitTime) + " before you can use " + Chat.elem(key) + " again."));
 
         return false;
 

@@ -12,7 +12,9 @@ public class Infraction {
     private long _issueEpoch;
     private long _lengthMs;
 
-    public Infraction(UUID holder, UUID issuer, InfractionType type, long issueEpoch, long lengthMs) {
+    private String _reason;
+
+    public Infraction(UUID holder, UUID issuer, InfractionType type, long issueEpoch, long lengthMs, String reason) {
 
         _owner = holder;
         _issuer = issuer;
@@ -21,6 +23,8 @@ public class Infraction {
 
         _issueEpoch = issueEpoch;
         _lengthMs = lengthMs;
+
+        _reason = reason;
 
     }
 
@@ -52,4 +56,7 @@ public class Infraction {
         return _lengthMs;
     }
 
+    public String getReason() {
+        return _reason;
+    }
 }
