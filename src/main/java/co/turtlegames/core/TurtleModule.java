@@ -3,6 +3,7 @@ package co.turtlegames.core;
 import co.turtlegames.core.command.CommandBase;
 import co.turtlegames.core.db.DatabaseConnector;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;

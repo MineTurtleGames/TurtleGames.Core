@@ -23,19 +23,11 @@ public class PlayerProfile {
 
         _profileManager = profileManager;
 
-        for (Map.Entry<String, Object> entry : data.getData().entrySet()) {
-
-            System.out.println(entry.getKey() + ": " + entry.getValue().toString());
-
-        }
-
         Map<String, Object> dataValues = data.getData();
 
         _owner = UUID.fromString((String) dataValues.get("uuid"));
         _rank = Rank.valueOf((String) dataValues.get("rank"));
         _xp = (long) data.getData().get("xp");
-
-        System.out.println("i love gazza");
 
     }
 
@@ -91,16 +83,12 @@ public class PlayerProfile {
 
         dataFuture.exceptionally((Throwable ex) -> {
 
-            System.out.println("Jeff jeff jeff 2");
-
             future.completeExceptionally(ex);
             return null;
 
         });
 
         dataFuture.thenAccept((InfractionData data) -> {
-
-            System.out.println("Jeff jeff jeff");
 
             _infractionData = data;
             future.complete(data);

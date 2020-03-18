@@ -14,9 +14,4 @@ public enum InfractionType {
         return _name;
     }
 
-    @Override
-    public String toString() {
-        return _name;
-    }
-
 }
