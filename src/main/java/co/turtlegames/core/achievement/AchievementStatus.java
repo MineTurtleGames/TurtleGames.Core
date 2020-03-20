@@ -2,6 +2,7 @@ package co.turtlegames.core.achievement;
 
 import co.turtlegames.core.achievement.action.CreateAchievementProgressAction;
 import co.turtlegames.core.achievement.action.IncrementAchievementProgressAction;
+import co.turtlegames.core.achievement.unique.IAchievementUniqueReward;
 import co.turtlegames.core.common.Chat;
 import co.turtlegames.core.db.IDatabaseAction;
 import co.turtlegames.core.profile.PlayerProfile;
@@ -96,6 +97,20 @@ public class AchievementStatus {
 
         ply.playSound(ply.getLocation(), Sound.ORB_PICKUP, 1, 0);
 
+        if(_achievementType.hasFlag(AchievementFlagType.UNIQUE_REWARD)) {
+
+            IAchievementUniqueReward reward = _achievementType.getFlagData(AchievementFlagType.UNIQUE_REWARD);
+
+            if(reward == null) {
+                ply.sendMessage(Chat.main("Achievement", "Failed to grant rewards. Please try again later"));
+                return;
+            }
+
+            profileManager.fetchProfile(_data.getOwnerUuid())
+                    .thenAccept(reward::grantReward);
+
+        }
+
     }
 
     public MetaAchievement getType() {
@@ -105,4 +120,9 @@ public class AchievementStatus {
     public boolean isComplete() {
         return _value >= this.getType().getGoalValue();
     }
+
+    public int getProgress() {
+        return _value;
+    }
+
 }

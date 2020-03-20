@@ -18,14 +18,14 @@ public class FetchInfractionDataAction implements IDatabaseAction<Collection<Inf
 
     private UUID _targetUuid;
 
-    public FetchInfractionDataAction(UUID target) {
-        _targetUuid = target;
+    public FetchInfractionDataAction(UUID targetUuid) {
+        _targetUuid = targetUuid;
     }
 
     @Override
     public Collection<Infraction> executeAction(Connection con) throws SQLException, DatabaseException {
 
-        PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM `infraction` WHERE `owner_uuid`=?");
+        PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM `infraction` WHERE `owner_uuid`=? ORDER BY `issue_time` DESC");
         preparedStatement.setString(1, _targetUuid.toString());
 
         ResultSet rs = preparedStatement.executeQuery();
@@ -40,8 +40,6 @@ public class FetchInfractionDataAction implements IDatabaseAction<Collection<Inf
                     rs.getLong("length"), rs.getString("reason")));
 
         }
-
-        System.out.println("Hi! " + infractions.size());
 
         return infractions;
 

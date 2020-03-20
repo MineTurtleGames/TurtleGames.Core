@@ -3,6 +3,7 @@ package co.turtlegames.core.achievement;
 import co.turtlegames.core.TurtleModule;
 import co.turtlegames.core.achievement.action.FetchAchievementDataAction;
 import co.turtlegames.core.achievement.action.FetchAchievementProgressAction;
+import co.turtlegames.core.achievement.command.AchievementCommand;
 import co.turtlegames.core.achievement.listener.WelcomeAchievementListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,7 +28,7 @@ public class AchievementManager extends TurtleModule {
     @Override
     public void initializeModule() {
 
-        FetchAchievementDataAction action = new FetchAchievementDataAction();
+        FetchAchievementDataAction action = new FetchAchievementDataAction(this);
         Collection<MetaAchievement> fetchedAchievements;
 
         this.getDatabaseConnector().<Collection<MetaAchievement>>executeActionAsync(action)
@@ -42,6 +43,8 @@ public class AchievementManager extends TurtleModule {
                 });
 
         this.registerListener(new WelcomeAchievementListener(this));
+
+        this.registerCommand(new AchievementCommand(this));
 
     }
 
@@ -80,6 +83,10 @@ public class AchievementManager extends TurtleModule {
 
     public MetaAchievement getAchievementById(Integer id) {
         return _achievementData.get(id);
+    }
+
+    public Collection<MetaAchievement> getAchievements() {
+        return _achievementData.values();
     }
 
 }

@@ -3,8 +3,11 @@ package co.turtlegames.core.chat.listeners;
 import co.turtlegames.core.chat.ChatManager;
 import co.turtlegames.core.chat.CoreChatEvent;
 import co.turtlegames.core.common.Chat;
+import co.turtlegames.core.infraction.Infraction;
+import co.turtlegames.core.infraction.InfractionType;
 import co.turtlegames.core.profile.PlayerProfile;
 import co.turtlegames.core.profile.ProfileManager;
+import co.turtlegames.core.util.UtilString;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,7 +39,6 @@ public class ChatHandleListener implements Listener {
         if (_chatManager.isSilenced()) {
 
             ply.sendMessage(Chat.main(_chatManager.getName(), "The chat is currently silenced"));
-            event.setCancelled(true);
             return;
 
         }
@@ -46,12 +48,22 @@ public class ChatHandleListener implements Listener {
 
         try {
             profile = profileFuture.get();
+            profile.fetchInfractionData().get();
         } catch (InterruptedException | ExecutionException ex) {
             return;
         }
 
-        if(profile == null)
+        Infraction activeMute = profile.getInfractionData()
+                                    .getRelevantInfraction(InfractionType.MUTE);
+
+        if(activeMute != null) {
+            
+            ply.sendMessage(Chat.main("Mute", "You are muted for " + Chat.elem(UtilString.formatTime(activeMute.getMsUntilExpiry()))
+                    + "\nReason: " + activeMute.getReason()));
+
             return;
+
+        }
 
         CoreChatEvent chatEvent = new CoreChatEvent(profile, event.getMessage());
         Bukkit.getPluginManager().callEvent(chatEvent);

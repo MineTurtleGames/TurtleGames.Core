@@ -27,6 +27,10 @@ public class InfractionData {
 
     }
 
+    public Collection<Infraction> getAllInfractions() {
+        return _infractions.values();
+    }
+
     public Collection<Infraction> getInfractionOfType(InfractionType type) {
         return _infractions.get(type);
     }
@@ -35,7 +39,7 @@ public class InfractionData {
 
         return _infractions.get(type)
                 .stream()
-                .filter((Infraction inf) -> inf.getType() == type)
+                .filter((Infraction inf) -> inf.getType() == type && !inf.isExpired())
                     .findFirst()
                         .orElse(null);
 

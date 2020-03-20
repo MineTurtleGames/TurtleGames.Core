@@ -1,5 +1,9 @@
 package co.turtlegames.core.profile.listeners;
 
+import co.turtlegames.core.common.Chat;
+import co.turtlegames.core.infraction.Infraction;
+import co.turtlegames.core.infraction.InfractionData;
+import co.turtlegames.core.infraction.InfractionType;
 import co.turtlegames.core.profile.PlayerProfile;
 import co.turtlegames.core.profile.ProfileManager;
 import co.turtlegames.core.profile.Rank;
@@ -47,9 +51,12 @@ public class ProfilePreCacheListener implements Listener {
 
         }
 
-        if(profile == null) {
+        InfractionData infractionData = profile.getInfractionData();
+        Infraction infraction = infractionData.getRelevantInfraction(InfractionType.BAN);
 
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatColor.RED + "Failed to fetch your profile - fuck you number 2");
+        if(infraction != null) {
+
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, Chat.getBanMessage(infraction));
             return;
 
         }

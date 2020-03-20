@@ -1,18 +1,27 @@
 package co.turtlegames.core.infraction.menu;
 
 import co.turtlegames.core.infraction.Infraction;
+import co.turtlegames.core.infraction.InfractionData;
 import co.turtlegames.core.infraction.InfractionType;
+import co.turtlegames.core.menu.IButtonCallback;
 import co.turtlegames.core.menu.Page;
+import co.turtlegames.core.profile.ProfileManager;
 import co.turtlegames.core.util.ItemBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Iterator;
 
 public class InfractionPage extends Page<InfractionMenu> {
 
@@ -89,6 +98,31 @@ public class InfractionPage extends Page<InfractionMenu> {
 
         });
 
+        getMenu().getModule().getModule(ProfileManager.class).fetchProfile(getMenu().getTarget().getUniqueId()).thenAccept(playerProfile -> {
+            playerProfile.fetchInfractionData().thenAccept(infractionData -> {
+
+                int slot = 45;
+
+                Iterator<Infraction> infractionIterator = infractionData.getAllInfractions()
+                                                        .stream()
+                                                        .sorted(Comparator.comparingLong(Infraction::getIssueEpoch).reversed())
+                                                            .iterator();
+
+                for (Iterator<Infraction> it = infractionIterator; it.hasNext(); ) {
+                    Infraction infr = it.next();
+
+                    if (slot >= 45 + 9)
+                        break;
+
+                    addButton(slot, getPunishHistory(infr), (page, event) -> System.out.println("heyoototo"));
+                    slot++;
+
+                }
+
+            });
+
+        });
+
     }
 
     private void selectSeverity(int severity) {
@@ -120,7 +154,7 @@ public class InfractionPage extends Page<InfractionMenu> {
     private void selectType(InfractionType type) {
 
         ItemStack item = getMenu().getInventory().getItem(_selectedType.getUiSlot());
-        ItemMeta meta =item.getItemMeta();
+        ItemMeta meta = item.getItemMeta();
         meta.removeEnchant(Enchantment.PROTECTION_ENVIRONMENTAL);
         item.setItemMeta(meta);
 
@@ -131,6 +165,24 @@ public class InfractionPage extends Page<InfractionMenu> {
 
         _selectedType = type;
 
+    }
+
+    private ItemStack getPunishHistory(Infraction infraction) {
+
+        Material material = infraction.getType() == InfractionType.WARN ? Material.PAPER : (infraction.getType() == InfractionType.MUTE ? Material.BOOK : (infraction.getType() == InfractionType.SHADOW_MUTE ? Material.BOOK_AND_QUILL : Material.IRON_SWORD));
+
+        ItemBuilder builder = new ItemBuilder(material, ChatColor.RED.toString() + ChatColor.BOLD.toString() + infraction.getType().getName()).setLore(
+                ChatColor.WHITE + "Issued By: " + ChatColor.YELLOW + Bukkit.getOfflinePlayer(infraction.getIssuer()).getName(),
+                ChatColor.WHITE + "Reason: " + ChatColor.YELLOW + infraction.getReason(),
+                "",
+                ChatColor.WHITE + "Issued At: " + ChatColor.YELLOW + new SimpleDateFormat("dd/MM/yyyy hh:mm").format(new Date(infraction.getIssueEpoch())),
+                ChatColor.WHITE + "Expires At: " + ChatColor.YELLOW + (infraction.getDuration() > 0 ? new SimpleDateFormat("dd/MM/yyyy hh:mm").format(new Date(infraction.getIssueEpoch() + infraction.getDuration())) : "Never")
+        );
+
+        if (!infraction.isExpired())
+            builder.hideEnchants().glow();
+
+        return builder.build();
 
     }
 

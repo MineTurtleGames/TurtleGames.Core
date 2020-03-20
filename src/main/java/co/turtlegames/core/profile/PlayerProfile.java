@@ -170,6 +170,13 @@ public class PlayerProfile {
         CompletableFuture<AchievementData> future = new CompletableFuture<AchievementData>();
         AchievementManager achievementManager = _profileManager.getModule(AchievementManager.class);
 
+        if(_achievementData != null) {
+
+            future.complete(_achievementData);
+            return future;
+
+        }
+
         CompletableFuture<AchievementData> achievementDataFuture = achievementManager.fetchAchievementData(_owner);
 
         achievementDataFuture.thenAccept((AchievementData data) -> {

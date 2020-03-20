@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.concurrent.ExecutionException;
 
 public abstract class CommandBase<ModuleType extends TurtleModule> extends BukkitCommand {
 
@@ -60,7 +61,12 @@ public abstract class CommandBase<ModuleType extends TurtleModule> extends Bukki
 
             }
 
-            executeCommand(playerProfile, args);
+            try {
+                executeCommand(playerProfile, args);
+            } catch(Exception ex) {
+                ex.printStackTrace();
+                player.sendMessage(Chat.main("Error", "An error occurred while executing the command"));
+            }
 
         }));
 

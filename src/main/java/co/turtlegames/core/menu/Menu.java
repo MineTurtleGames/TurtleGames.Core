@@ -95,6 +95,39 @@ public abstract class Menu<ModuleType extends TurtleModule> implements Listener 
 
         }
 
+        currentPage.draw();
+
+    }
+
+    public void switchPage(Class<? extends Page> pageClass) {
+
+        for (Page page : _pageStack) {
+
+            if (page.getClass().equals(pageClass)) {
+
+                _pageStack.remove(page);
+                _pageStack.push(page);
+
+                open();
+
+            }
+
+        }
+
+    }
+
+    public void openDynamicPage(Page page) {
+
+        _pageStack.add(page);
+        open();
+
+    }
+
+    public void openPreviousPage() {
+
+        Page page = _pageStack.pop();
+        open();
+
     }
 
     protected void addPage(Page<? extends Menu> page) {
@@ -103,8 +136,15 @@ public abstract class Menu<ModuleType extends TurtleModule> implements Listener 
 
     }
 
+    protected void registerCallback(int slot, IButtonCallback callback) {
+        _activeCallbacks.put(slot, callback);
+    }
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
+
+        if (_inventory == null)
+            return;
 
         if (event.getView().getTopInventory().equals(_inventory))
             event.setCancelled(true);
@@ -133,4 +173,5 @@ public abstract class Menu<ModuleType extends TurtleModule> implements Listener 
     public Inventory getInventory() {
         return _inventory;
     }
+
 }

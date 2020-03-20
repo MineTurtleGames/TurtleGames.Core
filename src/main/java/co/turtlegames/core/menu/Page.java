@@ -14,10 +14,14 @@ public abstract class Page<MenuType extends Menu> {
 
     private ArrayList<Button> _buttons;
 
+    private boolean _drawn;
+
     public Page(MenuType menu, int rows) {
 
         _menu = menu;
         _rows = rows;
+
+        _drawn = false;
 
         _buttons = new ArrayList<>();
 
@@ -33,11 +37,45 @@ public abstract class Page<MenuType extends Menu> {
 
     protected void addButton(int slot, ItemStack item, IButtonCallback callback) {
         _buttons.add(new Button(slot, item, callback));
+
+        if (_drawn) {
+
+            getMenu().getInventory().setItem(slot, item);
+            getMenu().registerCallback(slot, callback);
+
+        }
     }
 
     protected void addButton(int slot, ItemStack item) {
         addButton(slot, item, null);
     }
+
+    protected void removeButton(int slot) {
+
+        Button toRemove = null;
+
+        for(Button button : _buttons) {
+
+            if(button.getSlot() == slot) {
+                toRemove = button;
+                break;
+            }
+
+        }
+
+        if(toRemove == null)
+            return;
+
+        _buttons.remove(toRemove);
+        getMenu().getInventory().clear(slot);
+
+    }
+
+    protected void draw() {
+        _drawn = true;
+    }
+
+    protected void loadDynamicButtons() {  }
 
     public MenuType getMenu() {
         return _menu;

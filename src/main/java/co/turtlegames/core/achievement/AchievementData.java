@@ -31,8 +31,6 @@ public class AchievementData {
 
         AchievementStatus status = _achievementData.get(metaAchievement.getId());
 
-        System.out.println(status);
-
         if(status != null)
             return status;
 

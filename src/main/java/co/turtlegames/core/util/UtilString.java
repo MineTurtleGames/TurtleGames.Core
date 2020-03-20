@@ -3,6 +3,7 @@ package co.turtlegames.core.util;
 import org.bukkit.ChatColor;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 public class UtilString {
 
@@ -13,6 +14,10 @@ public class UtilString {
 
         return ChatColor.RED + "False";
 
+    }
+
+    public static String formatInteger(int number) {
+        return new DecimalFormat("###,###,###,###").format(number);
     }
 
     public static String formatTime(long timeInMs) {

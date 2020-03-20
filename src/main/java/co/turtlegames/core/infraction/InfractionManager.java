@@ -93,7 +93,6 @@ public class InfractionManager extends TurtleModule  {
 
     private void applyInfraction(Infraction infraction) {
 
-        System.out.println("hi");
 
         UUID uuid = infraction.getOwner();
         Player ply = Bukkit.getPlayer(uuid);
@@ -101,11 +100,7 @@ public class InfractionManager extends TurtleModule  {
         if(ply == null)
             return;
 
-        System.out.println("hi 2 ");
-
         ProfileManager profileManager = this.getModule(ProfileManager.class);
-
-        System.out.println("hi 3");
 
         PlayerProfile profile;
         try {
@@ -119,9 +114,7 @@ public class InfractionManager extends TurtleModule  {
 
         }
 
-        //System.out.println(ply.getUniqueId());
-
-        ply.sendMessage("n word");
+        profile.getInfractionData().registerInfraction(infraction);
 
         ply.sendMessage(Chat.main("Infraction",
                 "You have received a "
@@ -132,8 +125,12 @@ public class InfractionManager extends TurtleModule  {
 
         ply.playSound(ply.getLocation(), Sound.CHICKEN_EGG_POP, 1, 1);
 
-        if(infraction.getType() == InfractionType.BAN)
-            ply.kickPlayer("Get out buddy");
+        if(infraction.getType() == InfractionType.BAN) {
+
+            ply.sendMessage(Chat.main("Infraction", "You are being disconnected"));
+            ply.kickPlayer(Chat.getBanMessage(infraction));
+
+        }
 
     }
 

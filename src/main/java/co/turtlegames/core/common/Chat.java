@@ -1,8 +1,10 @@
 package co.turtlegames.core.common;
 
 import co.turtlegames.core.chat.CoreChatEvent;
+import co.turtlegames.core.infraction.Infraction;
 import co.turtlegames.core.profile.PlayerProfile;
 import co.turtlegames.core.profile.Rank;
+import co.turtlegames.core.util.UtilString;
 import co.turtlegames.core.util.UtilXp;
 import org.bukkit.ChatColor;
 
@@ -39,4 +41,13 @@ public class Chat {
 
     }
 
+    public static String getBanMessage(Infraction infraction) {
+
+        return ChatColor.RESET.toString() + ChatColor.GREEN + ChatColor.BOLD.toString() + "TURTLE GAMES - ACCOUNT SUSPENSION\n"
+                + ChatColor.RESET.toString() + ChatColor.RED + "Your ability to connect to our network has been suspended"
+                + ChatColor.GRAY + "\n\nThe suspension will expire in " + Chat.elem(UtilString.formatTime(infraction.getMsUntilExpiry())
+                + "\n\n" + ChatColor.GRAY + "Reason: " + Chat.elem(infraction.getReason())
+                + "\n" + ChatColor.GRAY + "Additional information and appeals can be found at " + Chat.elem("trtlgam.es/ban"));
+
+    }
 }

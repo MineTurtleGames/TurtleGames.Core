@@ -32,6 +32,11 @@ public class WelcomeAchievementListener implements Listener {
                         if(!status.isComplete())
                             status.incrementProgress(1);
 
+                        AchievementStatus bbStatus = data.getAchievementStatus(_achievementManager.getAchievementById(3));
+
+                        if(!bbStatus.isComplete())
+                            bbStatus.incrementProgress(5);
+
                     });
 
         });

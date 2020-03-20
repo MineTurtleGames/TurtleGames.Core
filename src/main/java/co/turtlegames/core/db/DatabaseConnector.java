@@ -57,7 +57,10 @@ public class DatabaseConnector {
                 con = _conPool.getConnection();
             } catch(SQLException ex) {
 
-                toComplete.completeExceptionally(ex);
+                Bukkit.getScheduler().runTask(_pluginInstance, () -> {
+                    toComplete.completeExceptionally(ex);
+                });
+
                 return;
 
             }
@@ -65,15 +68,22 @@ public class DatabaseConnector {
             try {
 
                 I response = (I) action.executeAction(con);
-                toComplete.complete(response);
+
+                Bukkit.getScheduler().runTask(_pluginInstance, () -> {
+                    toComplete.complete(response);
+                });
 
                 con.close();
 
 
             } catch(SQLException | DatabaseException ex) {
 
-                ex.printStackTrace();
-                toComplete.completeExceptionally(ex);
+                if(!(ex instanceof DatabaseException))
+                    ex.printStackTrace();;
+
+                Bukkit.getScheduler().runTask(_pluginInstance, () -> {
+                    toComplete.completeExceptionally(ex);
+                });
 
             }
 

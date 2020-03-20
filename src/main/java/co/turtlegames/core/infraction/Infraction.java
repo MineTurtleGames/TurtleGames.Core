@@ -59,4 +59,9 @@ public class Infraction {
     public String getReason() {
         return _reason;
     }
+
+    public boolean isExpired() {
+        return System.currentTimeMillis() > _issueEpoch + _lengthMs;
+    }
+
 }
