@@ -46,44 +46,50 @@ public class DatabaseConnector {
     }
 
     @SuppressWarnings("all")
-    public <I> CompletableFuture<I> executeActionAsync(IDatabaseAction action) {
+    public <I> CompletableFuture<I> executeActionAsync(IDatabaseAction<I> action, boolean preserveAsync) {
 
         CompletableFuture<I> toComplete = new CompletableFuture<I>();
 
         Bukkit.getScheduler().runTaskAsynchronously(_pluginInstance, () -> {
 
-            Connection con;
+            Connection con = null;
+
             try {
+
                 con = _conPool.getConnection();
-            } catch(SQLException ex) {
 
-                Bukkit.getScheduler().runTask(_pluginInstance, () -> {
-                    toComplete.completeExceptionally(ex);
-                });
-
-                return;
-
-            }
-
-            try {
-
-                I response = (I) action.executeAction(con);
-
-                Bukkit.getScheduler().runTask(_pluginInstance, () -> {
-                    toComplete.complete(response);
-                });
+                I response = action.executeAction(con);
 
                 con.close();
+                con = null;
 
+                if(preserveAsync)
+                    toComplete.complete(response);
+                else
+                    Bukkit.getScheduler().runTask(_pluginInstance, () -> {
+                        toComplete.complete(response);
+                    });
 
             } catch(SQLException | DatabaseException ex) {
 
                 if(!(ex instanceof DatabaseException))
-                    ex.printStackTrace();;
+                    ex.printStackTrace();
 
-                Bukkit.getScheduler().runTask(_pluginInstance, () -> {
+                if(preserveAsync)
                     toComplete.completeExceptionally(ex);
-                });
+                else
+                    Bukkit.getScheduler().runTask(_pluginInstance, () -> {
+                        toComplete.completeExceptionally(ex);
+                    });
+
+            } finally {
+
+                try {
+                    if(con != null)
+                        con.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace(); // fellas we have a problem
+                }
 
             }
 
@@ -93,5 +99,10 @@ public class DatabaseConnector {
         return toComplete;
 
     }
+
+    public <I> CompletableFuture<I> executeActionAsync(IDatabaseAction<I> action) {
+        return this.executeActionAsync(action, false);
+    }
+
 
 }

@@ -14,12 +14,15 @@ public class UtilXp {
     }
 
     public static int getLevel(long xp) {
-        return (int) Math.floor(Math.sqrt(((2d * xp)/A_CONST) + FACTOR) - (B_CONST/A_CONST));
+        return (int) Math.min(50, Math.floor(Math.sqrt(((2d * xp)/A_CONST) + FACTOR) - (B_CONST/A_CONST)));
     }
 
     public static String getLevelTag(int level) {
 
         ChatColor color = ChatColor.DARK_GRAY;
+
+        if(level > 50)
+            return ChatColor.DARK_GRAY + "[" + ChatColor.RED + level + ChatColor.DARK_GRAY + "]";
 
         if(level < 5) {
             color = ChatColor.DARK_GRAY;

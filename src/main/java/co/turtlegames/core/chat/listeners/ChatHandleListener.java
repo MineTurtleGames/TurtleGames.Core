@@ -7,6 +7,7 @@ import co.turtlegames.core.infraction.Infraction;
 import co.turtlegames.core.infraction.InfractionType;
 import co.turtlegames.core.profile.PlayerProfile;
 import co.turtlegames.core.profile.ProfileManager;
+import co.turtlegames.core.stats.PlayerStatData;
 import co.turtlegames.core.util.UtilString;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -69,6 +70,18 @@ public class ChatHandleListener implements Listener {
         Bukkit.getPluginManager().callEvent(chatEvent);
 
         Bukkit.broadcastMessage(Chat.chatMessage(chatEvent, event.getMessage()));
+        this.incrementChatStat(profile);
+
+    }
+
+    private void incrementChatStat(PlayerProfile profile) {
+
+        profile.fetchStatData().thenAccept((PlayerStatData data) -> {
+
+            data.getStat("global", "chatMessageCount")
+                    .increment(1);
+
+        });
 
     }
 

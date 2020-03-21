@@ -30,7 +30,7 @@ public class UpdateProfileRankAction implements IDatabaseAction<Boolean> {
         statement.setString(1, _newRank.toString());
         statement.setString(2, _targetUuid.toString());
 
-        return true;
+        return statement.executeUpdate() > 0;
 
     }
 

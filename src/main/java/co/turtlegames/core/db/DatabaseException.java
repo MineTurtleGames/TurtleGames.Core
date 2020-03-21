@@ -5,7 +5,6 @@ public class DatabaseException extends Exception {
     public enum FailureType {
 
         NOT_FOUND,
-        FETCH_IN_PROGRESS,
         MISC;
 
     }

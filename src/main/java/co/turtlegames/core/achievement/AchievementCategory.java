@@ -7,7 +7,7 @@ public enum AchievementCategory {
     GLOBAL("Global", Material.BEACON, new String[] { "Allan please add detail" }),
     ACCOUNT("Account", Material.REDSTONE_COMPARATOR, new String[] { "insert description"}),
 
-    MASTERY("Mastery Challenges", Material.NETHER_STAR, new String[] { "Difficult challenges that offer unique rewards upon completion" });
+    MASTERY("Mastery Challenges", Material.NETHER_STAR, new String[] { "Difficult challenges that", "offer unique rewards on completion" });
 
     private String _name;
     private Material _icon;

@@ -3,6 +3,7 @@ package co.turtlegames.core.infraction;
 import co.turtlegames.core.TurtleCore;
 import co.turtlegames.core.TurtleModule;
 import co.turtlegames.core.common.Chat;
+import co.turtlegames.core.infraction.action.RemoveInfractionAction;
 import co.turtlegames.core.infraction.command.PunishCommand;
 import co.turtlegames.core.profile.PlayerProfile;
 import co.turtlegames.core.profile.ProfileManager;
@@ -64,12 +65,42 @@ public class InfractionManager extends TurtleModule  {
 
     }
 
-    public CompletableFuture<Boolean> registerInfraction(Infraction infraction) {
+    public CompletableFuture<Boolean> removeInfraction(Infraction infraction, UUID admin, String reason) {
 
         CompletableFuture<Boolean> future = new CompletableFuture<>();
 
+        RemoveInfractionAction action = new RemoveInfractionAction(infraction.getId(), admin, reason);
+        CompletableFuture<Boolean> data = _dbConnector.executeActionAsync(action);
+
+        data.exceptionally(ex -> {
+            future.completeExceptionally(ex);
+            return null;
+        });
+
+        data.thenAccept(success -> {
+
+            if (success) {
+
+                infraction.setRemoved(true);
+                infraction.setRemovedBy(admin);
+                infraction.setRemoveReason(reason);
+
+            }
+
+            future.complete(success);
+
+        });
+
+        return future;
+
+    }
+
+    public CompletableFuture<Integer> registerInfraction(Infraction infraction) {
+
+        CompletableFuture<Integer> future = new CompletableFuture<>();
+
         RegisterInfractionAction infractionDataFetch = new RegisterInfractionAction(infraction);
-        CompletableFuture<Boolean> data =_dbConnector.executeActionAsync(infractionDataFetch);
+        CompletableFuture<Integer> data =_dbConnector.executeActionAsync(infractionDataFetch);
 
         data.exceptionally((Throwable ex) -> {
 
@@ -78,12 +109,12 @@ public class InfractionManager extends TurtleModule  {
 
         });
 
-        data.thenAccept((Boolean success) -> {
+        data.thenAccept((Integer id) -> {
 
-            if(success)
-                this.applyInfraction(infraction);
+            future.complete(id);
+            infraction.setId(id);
 
-            future.complete(success);
+            this.applyInfraction(infraction);
 
         });
 

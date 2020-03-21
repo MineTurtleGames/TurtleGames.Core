@@ -33,11 +33,30 @@ public class FetchInfractionDataAction implements IDatabaseAction<Collection<Inf
 
         while(rs.next()) {
 
-            infractions.add(new Infraction(UUID.fromString(rs.getString("owner_uuid")),
-                    UUID.fromString(rs.getString("issuer_uuid")),
-                    InfractionType.valueOf(rs.getString("type")),
-                    rs.getLong("issue_time"),
-                    rs.getLong("length"), rs.getString("reason")));
+            boolean removed = rs.getBoolean("removed");
+
+            Infraction infraction;
+
+            if (removed) {
+
+                infraction = new Infraction(UUID.fromString(rs.getString("owner_uuid")),
+                        UUID.fromString(rs.getString("issuer_uuid")),
+                        InfractionType.valueOf(rs.getString("type")),
+                        rs.getLong("issue_time"),
+                        rs.getLong("length"), rs.getString("reason"), true, UUID.fromString(rs.getString("removed_by")), rs.getString("reason"));
+
+            } else {
+
+                infraction = new Infraction(UUID.fromString(rs.getString("owner_uuid")),
+                        UUID.fromString(rs.getString("issuer_uuid")),
+                        InfractionType.valueOf(rs.getString("type")),
+                        rs.getLong("issue_time"),
+                        rs.getLong("length"), rs.getString("reason"));
+            }
+
+            infraction.setId(rs.getInt("id"));
+
+            infractions.add(infraction);
 
         }
 

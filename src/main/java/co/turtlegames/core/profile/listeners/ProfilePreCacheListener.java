@@ -68,6 +68,10 @@ public class ProfilePreCacheListener implements Listener {
 
         }
 
+        profile.fetchAchievementData();
+        profile.fetchCurrencyData();
+        profile.fetchStatData();
+
     }
 
     @EventHandler

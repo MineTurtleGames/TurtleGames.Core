@@ -3,6 +3,7 @@ package co.turtlegames.core.scoreboard;
 import co.turtlegames.core.common.Chat;
 import co.turtlegames.core.profile.PlayerProfile;
 import co.turtlegames.core.profile.ProfileManager;
+import co.turtlegames.core.profile.Rank;
 import co.turtlegames.core.util.UtilScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -84,7 +85,7 @@ public class TurtlePlayerScoreboard {
             if(profile == null || profile == ProfileManager.LOADING)
                 return;
 
-            team.setPrefix(profile.getRank().getTag() + ChatColor.GRAY + " ");
+            team.setPrefix(profile.getRank().getTag() + ChatColor.GRAY + (profile.getRank() != Rank.PLAYER ? " " : ""));
             team.setNameTagVisibility(NameTagVisibility.ALWAYS);
 
         });

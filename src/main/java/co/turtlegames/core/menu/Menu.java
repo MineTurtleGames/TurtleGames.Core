@@ -9,6 +9,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -146,6 +147,9 @@ public abstract class Menu<ModuleType extends TurtleModule> implements Listener 
         if (_inventory == null)
             return;
 
+        if(event.getClickedInventory() == null)
+            return;
+
         if (event.getView().getTopInventory().equals(_inventory))
             event.setCancelled(true);
 
@@ -167,6 +171,14 @@ public abstract class Menu<ModuleType extends TurtleModule> implements Listener 
             HandlerList.unregisterAll(this);
 
         }
+
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+
+        if (event.getPlayer().equals(_owner))
+            HandlerList.unregisterAll(this);
 
     }
 

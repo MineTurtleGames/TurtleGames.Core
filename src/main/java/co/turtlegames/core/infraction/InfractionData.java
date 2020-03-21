@@ -27,6 +27,22 @@ public class InfractionData {
 
     }
 
+    protected void applyRemoval(long epoch, UUID removedBy, String reason) {
+
+        for (Infraction infraction : getAllInfractions()) {
+
+            if (infraction.getIssueEpoch() == epoch) {
+
+                infraction.setRemoved(true);
+                infraction.setRemovedBy(removedBy);
+                infraction.setRemoveReason(reason);
+
+            }
+
+        }
+
+    }
+
     public Collection<Infraction> getAllInfractions() {
         return _infractions.values();
     }
@@ -39,7 +55,7 @@ public class InfractionData {
 
         return _infractions.get(type)
                 .stream()
-                .filter((Infraction inf) -> inf.getType() == type && !inf.isExpired())
+                .filter((Infraction inf) -> inf.getType() == type && inf.isActive())
                     .findFirst()
                         .orElse(null);
 

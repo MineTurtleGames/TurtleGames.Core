@@ -4,6 +4,7 @@ import co.turtlegames.core.achievement.action.CreateAchievementProgressAction;
 import co.turtlegames.core.achievement.action.IncrementAchievementProgressAction;
 import co.turtlegames.core.achievement.unique.IAchievementUniqueReward;
 import co.turtlegames.core.common.Chat;
+import co.turtlegames.core.currency.CurrencyType;
 import co.turtlegames.core.db.IDatabaseAction;
 import co.turtlegames.core.profile.PlayerProfile;
 import co.turtlegames.core.profile.ProfileManager;
@@ -82,6 +83,7 @@ public class AchievementStatus {
 
         profileManager.fetchProfile(_data.getOwnerUuid()).thenAccept((PlayerProfile profile) -> {
            profile.addXp(_achievementType.getRewardXp());
+           profile.modifyCurrency(CurrencyType.COINS, _achievementType.getRewardCoins());
         });
 
         Player ply = Bukkit.getPlayer(_data.getOwnerUuid());

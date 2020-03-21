@@ -2,11 +2,17 @@ package co.turtlegames.core.profile;
 
 import co.turtlegames.core.achievement.AchievementData;
 import co.turtlegames.core.achievement.AchievementManager;
+import co.turtlegames.core.currency.CurrencyData;
+import co.turtlegames.core.currency.CurrencyManager;
+import co.turtlegames.core.currency.CurrencyType;
 import co.turtlegames.core.infraction.InfractionData;
 import co.turtlegames.core.infraction.InfractionManager;
 import co.turtlegames.core.profile.action.AddXpAction;
 import co.turtlegames.core.profile.action.FetchPlayerDataAction;
 import co.turtlegames.core.profile.action.UpdateProfileRankAction;
+import co.turtlegames.core.stats.PlayerStatData;
+import co.turtlegames.core.stats.PlayerStatManager;
+import co.turtlegames.core.util.Call;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import java.util.Map;
@@ -24,6 +30,8 @@ public class PlayerProfile {
 
     private InfractionData _infractionData = null;
     private AchievementData _achievementData = null;
+    private CurrencyData _currencyData = null;
+    private PlayerStatData _statData = null;
 
     public PlayerProfile(ProfileManager profileManager, FetchPlayerDataAction.PlayerData data) {
 
@@ -66,6 +74,42 @@ public class PlayerProfile {
 
     public long getXp() {
         return _xp;
+    }
+
+    public CurrencyData getCurrencyData() {
+        return _currencyData;
+    }
+
+    public CompletableFuture<CurrencyData> fetchCurrencyData() {
+
+        CompletableFuture<CurrencyData> future = new CompletableFuture<>();
+
+        if (_currencyData != null) {
+
+            future.complete(_currencyData);
+            return future;
+        }
+
+        CurrencyManager currencyManager = _profileManager.getModule(CurrencyManager.class);
+
+        CompletableFuture<CurrencyData> dataFuture = currencyManager.fetchPlayerCurrencies(_owner);
+
+        dataFuture.exceptionally((ex) -> {
+
+            future.completeExceptionally(ex);
+            return null;
+
+        });
+
+        dataFuture.thenAccept(currencyData -> {
+
+            _currencyData = currencyData;
+            future.complete(currencyData);
+
+        });
+
+        return future;
+
     }
 
     public InfractionData getInfractionData() {
@@ -135,6 +179,21 @@ public class PlayerProfile {
 
     }
 
+    public CompletableFuture<Boolean> modifyCurrency(CurrencyType type, int amount) {
+
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+        CompletableFuture<CurrencyData> dataFuture = fetchCurrencyData();
+
+        dataFuture.thenAccept(data -> {
+
+            data.setBalance(type, data.getBalance(type) + amount);
+
+        });
+
+        return future;
+
+    }
+
     public CompletableFuture<Boolean> addXp(long amount) {
 
         CompletableFuture<Boolean> future = new CompletableFuture<>();
@@ -196,4 +255,32 @@ public class PlayerProfile {
         return future;
 
     }
+
+    public CompletableFuture<PlayerStatData> fetchStatData() {
+
+        CompletableFuture<PlayerStatData> future = new CompletableFuture<PlayerStatData>();
+        PlayerStatManager statManager = _profileManager.getModule(PlayerStatManager.class);
+
+        if(_statData != null) {
+
+            future.complete(_statData);
+            return future;
+
+        }
+
+        CompletableFuture<PlayerStatData> statDataFuture = statManager.fetchStatData(_owner);
+
+        statDataFuture.thenAccept((PlayerStatData data) -> {
+
+            _statData = data;
+            future.complete(data);
+
+        });
+
+        statDataFuture.exceptionally(Call.exceptionPassthrough(future::completeExceptionally));
+
+        return future;
+
+    }
+
 }
