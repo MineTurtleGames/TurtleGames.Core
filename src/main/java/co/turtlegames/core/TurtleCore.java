@@ -31,6 +31,9 @@ public class TurtleCore extends JavaPlugin {
     @Override
     public void onEnable() {
 
+        // todo hello
+        // jeffery
+
         _coreSingleton = this;
 
         Properties dbProperties = new Properties();
