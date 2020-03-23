@@ -63,5 +63,6 @@ public abstract class TurtleModule implements Listener {
     }
 
     public abstract void initializeModule();
+    public void deinitializeModule() {};
 
 }

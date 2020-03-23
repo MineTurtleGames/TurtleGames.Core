@@ -56,6 +56,8 @@ public class TurtlePlayerScoreboard {
         this.initializeTeamData();
         ply.setScoreboard(_playerScoreboard);
 
+        this.clearScoreboard();
+
     }
 
     public void initializeTeamData() {
@@ -93,34 +95,37 @@ public class TurtlePlayerScoreboard {
     }
 
     public void clearScoreboard() {
-
-        _slots = new String[16];
-
-        for(int i = 0; i < 16 ; i ++)
+        for(int i = 0; i <= 15; i++)
             this.setLine(i, null);
-
     }
 
     public void setLine(int line, String value) {
 
-        int realScore = 15 - line;
+        int lineScore = 15 - line;
+        String entryName = UtilScoreboard.getUniqueChatColor(line) + ChatColor.RESET.toString();
 
-        if(value == null || value.length() == 0)
-            value = "" + UtilScoreboard.getUniqueChatColor(line);
+        Team team = _playerScoreboard.getEntryTeam(entryName);
 
-        if(_slots[line] != null) {
+        if(value == null) {
 
-            if(_slots[line].equals(value))
+            if(team == null)
                 return;
 
-            _playerScoreboard.resetScores(_slots[line]);
+            _playerScoreboard.resetScores(entryName);
+            return;
 
         }
 
-        Score score = _sidebarObjective.getScore(value);
-        score.setScore(realScore);
+        if(team == null) {
 
-        _slots[line] = value;
+            team = _playerScoreboard.registerNewTeam(entryName);
+            team.addEntry(entryName);
+
+            _sidebarObjective.getScore(entryName).setScore(lineScore);
+
+        }
+
+        team.setPrefix(value);
 
     }
 

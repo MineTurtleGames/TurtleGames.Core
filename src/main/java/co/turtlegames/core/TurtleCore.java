@@ -11,6 +11,7 @@ import co.turtlegames.core.recharge.RechargeManager;
 import co.turtlegames.core.scoreboard.TurtleScoreboardManager;
 import co.turtlegames.core.stats.PlayerStatManager;
 import co.turtlegames.core.tab.TabManager;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -31,18 +32,15 @@ public class TurtleCore extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        // todo hello
-        // jeffery
-
         _coreSingleton = this;
 
         Properties dbProperties = new Properties();
 
-        dbProperties.setProperty("serverName", "eu01-sql.pebblehost.com");
+        dbProperties.setProperty("serverName", "127.0.0.1");
         dbProperties.setProperty("portNumber", "3306");
-        dbProperties.setProperty("databaseName", "customer_107745_turtle");
-        dbProperties.setProperty("user", "customer_107745_turtle");
-        dbProperties.setProperty("password", "60Kqd8dQaJ~#qSB5~vCU");
+        dbProperties.setProperty("databaseName", "turtle");
+        dbProperties.setProperty("user", "minecraft");
+        dbProperties.setProperty("password", "gary");
 
         _connector = new DatabaseConnector(this, dbProperties);
         _registeredModules = new HashMap<>();
@@ -59,13 +57,18 @@ public class TurtleCore extends JavaPlugin {
 
         this.registerModule(new TabManager(this));
 
-        this.initializeModules();
+        Bukkit.getScheduler().runTask(this, this::initializeModules);
 
     }
 
     @Override
     public void onDisable() {
+
         _connector.deinitialize();
+
+        for(TurtleModule module : _registeredModules.values())
+            module.deinitializeModule();
+
     }
 
 
