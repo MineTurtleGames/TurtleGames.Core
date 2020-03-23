@@ -6,6 +6,9 @@ import co.turtlegames.core.chat.dm.DirectMessageManager;
 import co.turtlegames.core.currency.CurrencyManager;
 import co.turtlegames.core.db.DatabaseConnector;
 import co.turtlegames.core.infraction.InfractionManager;
+import co.turtlegames.core.metrics.Metric;
+import co.turtlegames.core.metrics.MetricManager;
+import co.turtlegames.core.metrics.type.ServerStatusMetric;
 import co.turtlegames.core.profile.ProfileManager;
 import co.turtlegames.core.recharge.RechargeManager;
 import co.turtlegames.core.scoreboard.TurtleScoreboardManager;
@@ -54,15 +57,20 @@ public class TurtleCore extends JavaPlugin {
         this.registerModule(new DirectMessageManager(this));
         this.registerModule(new CurrencyManager(this));
         this.registerModule(new PlayerStatManager(this));
+        this.registerModule(new MetricManager(this)); //46132
 
         this.registerModule(new TabManager(this));
 
         Bukkit.getScheduler().runTask(this, this::initializeModules);
 
+        this.<MetricManager>getModule(MetricManager.class).register(new ServerStatusMetric(1));
+
     }
 
     @Override
     public void onDisable() {
+
+        this.<MetricManager>getModule(MetricManager.class).register(new ServerStatusMetric(-1));
 
         _connector.deinitialize();
 
