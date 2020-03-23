@@ -38,9 +38,7 @@ public class TurtleScoreboardManager extends TurtleModule {
 
         }
 
-        Bukkit.getScheduler().runTaskTimer(this.getPlugin(), () -> {
-            this.updateAll();
-        },10,10);
+        Bukkit.getScheduler().runTaskTimer(this.getPlugin(), this::updateAll,2,2);
 
     }
 
