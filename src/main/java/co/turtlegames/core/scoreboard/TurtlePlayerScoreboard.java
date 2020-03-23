@@ -4,6 +4,7 @@ import co.turtlegames.core.common.Chat;
 import co.turtlegames.core.profile.PlayerProfile;
 import co.turtlegames.core.profile.ProfileManager;
 import co.turtlegames.core.profile.Rank;
+import co.turtlegames.core.util.StringChunker;
 import co.turtlegames.core.util.UtilScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -101,7 +102,7 @@ public class TurtlePlayerScoreboard {
 
     public void setLine(int line, String value) {
 
-        int lineScore = 15 - line;
+        int lineScore = 16 - line;
         String entryName = UtilScoreboard.getUniqueChatColor(line) + ChatColor.RESET.toString();
 
         Team team = _playerScoreboard.getEntryTeam(entryName);
@@ -125,7 +126,13 @@ public class TurtlePlayerScoreboard {
 
         }
 
-        team.setPrefix(value);
+        String[] lineSplit = StringChunker.chunk(value, 16);
+
+        if(lineSplit.length > 0)
+            team.setPrefix(lineSplit[0]);
+
+        if(lineSplit.length > 1)
+            team.setSuffix(lineSplit[1]);
 
     }
 
