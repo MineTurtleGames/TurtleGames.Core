@@ -69,6 +69,15 @@ public class ChatHandleListener implements Listener {
         CoreChatEvent chatEvent = new CoreChatEvent(profile, event.getMessage());
         Bukkit.getPluginManager().callEvent(chatEvent);
 
+        activeMute = profile.getInfractionData().getRelevantInfraction(InfractionType.SHADOW_MUTE);
+
+        if (activeMute != null) {
+
+            ply.sendMessage(Chat.chatMessage(chatEvent, event.getMessage()));
+            return;
+
+        }
+
         Bukkit.broadcastMessage(Chat.chatMessage(chatEvent, event.getMessage()));
         this.incrementChatStat(profile);
 

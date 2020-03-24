@@ -147,6 +147,9 @@ public class InfractionManager extends TurtleModule  {
 
         profile.getInfractionData().registerInfraction(infraction);
 
+        if (infraction.getType().equals(InfractionType.SHADOW_MUTE))
+            return;
+
         ply.sendMessage(Chat.main("Infraction",
                 "You have received a "
                         + Chat.elem(infraction.getType().getName())
