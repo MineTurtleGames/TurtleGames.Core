@@ -22,7 +22,7 @@ public class MetricManager extends TurtleModule {
 
         _database = InfluxDBFactory.connect("http://vmi360387.contaboserver.net:8086");
         _database.setDatabase("turtle");
-        _database.setRetentionPolicy("CREATE RETENTION POLICY turtle ON turtle DURATION 52w REPLICATION 1");
+        _database.setRetentionPolicy("turtle");
 
     }
 

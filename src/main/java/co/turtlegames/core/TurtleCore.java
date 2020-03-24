@@ -61,9 +61,13 @@ public class TurtleCore extends JavaPlugin {
 
         this.registerModule(new TabManager(this));
 
-        Bukkit.getScheduler().runTask(this, this::initializeModules);
+        Bukkit.getScheduler().runTask(this, () -> {
 
-        this.<MetricManager>getModule(MetricManager.class).register(new ServerStatusMetric(1));
+            this.initializeModules();
+            this.<MetricManager>getModule(MetricManager.class).register(new ServerStatusMetric(1));
+
+        });
+
 
     }
 
