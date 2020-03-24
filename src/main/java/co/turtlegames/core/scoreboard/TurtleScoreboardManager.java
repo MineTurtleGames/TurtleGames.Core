@@ -23,13 +23,12 @@ public class TurtleScoreboardManager extends TurtleModule {
         this.registerListener(new ScoreboardPlayerJoinListener(this));
 
         _sbMap = new HashMap<>();
+        _activeView = new DefaultScoreboardView();
 
     }
 
     @Override
     public void initializeModule() {
-
-        _activeView = new DefaultScoreboardView();
 
         for(Player player : Bukkit.getOnlinePlayers()) {
 
