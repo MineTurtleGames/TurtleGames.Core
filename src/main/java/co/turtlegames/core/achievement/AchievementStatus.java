@@ -39,6 +39,9 @@ public class AchievementStatus {
 
     public void incrementProgress(int amount) {
 
+        if(_value >= _achievementType.getGoalValue())
+            return;
+
         IDatabaseAction<Integer> dbQuery;
 
         if(_dbExists) {
@@ -51,6 +54,7 @@ public class AchievementStatus {
 
         dbQueryFuture.thenAccept((Integer value) -> {
 
+            _dbExists = true;
             _value = value;
 
             if(_value >= _achievementType.getGoalValue())
