@@ -10,9 +10,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-public class CommandDirectMessage extends CommandBase<DirectMessageManager> {
+public class DirectMessageCommand extends CommandBase<DirectMessageManager> {
 
-    public CommandDirectMessage(DirectMessageManager directMessageManager) {
+    public DirectMessageCommand(DirectMessageManager directMessageManager) {
         super(directMessageManager, Rank.PLAYER, "dm", "pm", "msg", "message");
     }
 

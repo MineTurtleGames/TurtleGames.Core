@@ -20,7 +20,7 @@ public class DirectMessageManager extends TurtleModule {
 
     @Override
     public void initializeModule() {
-        this.registerCommand(new CommandDirectMessage(this));
+        this.registerCommand(new DirectMessageCommand(this));
     }
 
     public void pushLastMessageSender(UUID to, UUID from) {
