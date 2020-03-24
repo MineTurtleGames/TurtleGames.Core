@@ -22,7 +22,7 @@ public class DatabaseConnector {
         _conPool = new HikariDataSource();
 
         // VV default values VV
-        _conPool.setMaximumPoolSize(1);
+        _conPool.setMaximumPoolSize(15);
         _conPool.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
 
         _conPool.setDataSourceProperties(poolProperties);

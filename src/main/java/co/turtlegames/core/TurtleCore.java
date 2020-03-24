@@ -14,6 +14,7 @@ import co.turtlegames.core.recharge.RechargeManager;
 import co.turtlegames.core.scoreboard.TurtleScoreboardManager;
 import co.turtlegames.core.stats.PlayerStatManager;
 import co.turtlegames.core.tab.TabManager;
+import co.turtlegames.core.util.AuthInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -41,9 +42,9 @@ public class TurtleCore extends JavaPlugin {
 
         dbProperties.setProperty("serverName", "127.0.0.1");
         dbProperties.setProperty("portNumber", "3306");
-        dbProperties.setProperty("databaseName", "turtle");
-        dbProperties.setProperty("user", "minecraft");
-        dbProperties.setProperty("password", "gary");
+        dbProperties.setProperty("databaseName", AuthInfo.MARIA_DATABASE);
+        dbProperties.setProperty("user", AuthInfo.MARIA_USER);
+        dbProperties.setProperty("password", AuthInfo.MARIA_PASSWORD);
 
         _connector = new DatabaseConnector(this, dbProperties);
         _registeredModules = new HashMap<>();

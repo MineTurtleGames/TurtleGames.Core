@@ -1,6 +1,7 @@
 package co.turtlegames.core.metrics;
 
 import co.turtlegames.core.TurtleModule;
+import co.turtlegames.core.util.AuthInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
@@ -20,9 +21,9 @@ public class MetricManager extends TurtleModule {
     @Override
     public void initializeModule() {
 
-        _database = InfluxDBFactory.connect("http://vmi360387.contaboserver.net:8086");
-        _database.setDatabase("turtle");
-        _database.setRetentionPolicy("turtle");
+        _database = InfluxDBFactory.connect("http://" + AuthInfo.MASTER_SERVER_HOST + ":8086");
+        _database.setDatabase(AuthInfo.METRIC_DATABASE);
+        _database.setRetentionPolicy(AuthInfo.METRIC_RETENTION_POLICY);
 
     }
 
