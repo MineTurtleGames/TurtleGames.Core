@@ -6,6 +6,7 @@ import co.turtlegames.core.common.Chat;
 import co.turtlegames.core.scoreboard.listeners.ScoreboardPlayerJoinListener;
 import co.turtlegames.core.scoreboard.views.DefaultScoreboardView;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -23,13 +24,12 @@ public class TurtleScoreboardManager extends TurtleModule {
         this.registerListener(new ScoreboardPlayerJoinListener(this));
 
         _sbMap = new HashMap<>();
+        _activeView = new DefaultScoreboardView();
 
     }
 
     @Override
     public void initializeModule() {
-
-        _activeView = new DefaultScoreboardView();
 
         for(Player player : Bukkit.getOnlinePlayers()) {
 
@@ -68,8 +68,18 @@ public class TurtleScoreboardManager extends TurtleModule {
 
     public void updateAll() {
 
-        for(TurtlePlayerScoreboard scoreboard : _sbMap.values())
+        for(TurtlePlayerScoreboard scoreboard : _sbMap.values()) {
+
+            if(scoreboard.getView() != _activeView) {
+
+                scoreboard.getOwner().sendMessage(Chat.main("Scoreboard", "Your scoreboard is desynchronized. Attempting to correct."));
+                scoreboard.setActiveView(_activeView);
+
+            }
+
             scoreboard.update();
+
+        }
 
     }
 

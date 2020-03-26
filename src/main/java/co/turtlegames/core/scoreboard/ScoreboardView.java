@@ -8,6 +8,10 @@ public abstract class ScoreboardView {
         _name = name;
     }
 
+    public String getName() {
+        return _name;
+    }
+
     public abstract void initializeBoard(TurtlePlayerScoreboard scoreboard);
     public abstract void updateBoard(TurtlePlayerScoreboard scoreboard);
 

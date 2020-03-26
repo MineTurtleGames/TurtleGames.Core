@@ -158,4 +158,8 @@ public class TurtlePlayerScoreboard {
         return _player.get();
     }
 
+    public ScoreboardView getView() {
+        return _activeView;
+    }
+
 }
