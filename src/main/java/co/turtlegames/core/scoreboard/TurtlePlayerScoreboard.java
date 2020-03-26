@@ -14,6 +14,7 @@ import org.bukkit.scoreboard.*;
 import javax.swing.*;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -151,6 +152,10 @@ public class TurtlePlayerScoreboard {
 
     public void update() {
         _activeView.updateBoard(this);
+    }
+
+    public Player getOwner() {
+        return _player.get();
     }
 
 }

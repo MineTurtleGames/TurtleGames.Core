@@ -1,8 +1,13 @@
 package co.turtlegames.core.util;
 
+import com.google.common.base.Strings;
 import org.bukkit.ChatColor;
 
 public class UtilXp {
+
+    private static long MAX_XP; static {
+        MAX_XP = UtilXp.getXpRequired(50);
+    }
 
     private static double A_CONST = 600D;
     private static double B_CONST = 5000D;
@@ -41,6 +46,30 @@ public class UtilXp {
         }
 
         return color + "[" + level + "]";
+
+    }
+
+    public static String drawXpBar(long xp, int length) {
+
+        if(xp >= MAX_XP)
+            return ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + Strings.repeat(":", length) + ChatColor.DARK_GRAY + "]";
+
+        int currentLevel = UtilXp.getLevel(xp);
+
+        long nextLevelRequiredXp = UtilXp.getXpRequired(currentLevel + 1);
+        long previousLevelRequiredXp = UtilXp.getXpRequired(currentLevel);
+
+        long requiredXp = nextLevelRequiredXp - xp;
+        long totalDifference = nextLevelRequiredXp - previousLevelRequiredXp;
+
+        double ratio = (1.0d * requiredXp)/totalDifference;
+
+        int filledAmount = (int) Math.floor(length * ratio);
+        int unfilledAmount = length - filledAmount;
+
+        String innerBar = ChatColor.AQUA + Strings.repeat(":", filledAmount)
+                + ChatColor.WHITE + Strings.repeat(":", unfilledAmount);
+        return ChatColor.DARK_GRAY + "[" + innerBar + ChatColor.DARK_GRAY + "]";
 
     }
 

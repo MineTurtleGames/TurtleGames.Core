@@ -99,8 +99,17 @@ public class TurtleCore extends JavaPlugin {
 
     public void initializeModules() {
 
-        for(TurtleModule module : _registeredModules.values())
-            module.initializeModule();
+        for(TurtleModule module : _registeredModules.values()) {
+
+            try {
+                module.initializeModule();
+            } catch(Exception ex) {
+
+                System.err.println("An error occurred while starting module " + module.getName() + ": ");
+                ex.printStackTrace();
+
+            }
+        }
 
     }
 

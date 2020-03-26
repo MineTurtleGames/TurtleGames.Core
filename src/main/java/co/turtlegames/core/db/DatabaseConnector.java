@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class DatabaseConnector {
@@ -50,7 +51,7 @@ public class DatabaseConnector {
 
         CompletableFuture<I> toComplete = new CompletableFuture<I>();
 
-        Bukkit.getScheduler().runTaskAsynchronously(_pluginInstance, () -> {
+        Runnable dbRunnable = () -> {
 
             Connection con = null;
 
@@ -94,7 +95,12 @@ public class DatabaseConnector {
             }
 
 
-        });
+        };
+
+        Thread thread = new Thread(dbRunnable);
+        thread.setName("TurtleCore DB Executor Thread - " + UUID.randomUUID());
+
+        thread.start();
 
         return toComplete;
 
