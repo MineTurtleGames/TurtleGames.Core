@@ -3,11 +3,14 @@ package co.turtlegames.core.tworld;
 import co.turtlegames.core.tworld.io.TurtleInputStream;
 import co.turtlegames.core.tworld.io.TurtleOutputStream;
 import co.turtlegames.core.tworld.loader.TurtleWorldLoader;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import net.minecraft.server.v1_8_R3.ChunkCoordIntPair;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,6 +32,10 @@ public class TurtleWorldFormat {
 
     private BitSet _chunkMask;
     private Map<ChunkCoordIntPair, TurtleWorldChunk> _chunks;
+
+    private Multimap<Byte, TurtleWorldMetadata> _metadata = MultimapBuilder.hashKeys()
+                                                                .linkedListValues()
+                                                                    .build();;
 
     public static TurtleWorldFormat loadFromStream(TurtleInputStream stream) throws IOException {
 
@@ -53,8 +60,25 @@ public class TurtleWorldFormat {
 
         byte[] chunkData = stream.readCompressedData();
 
+        byte[] metadata = stream.readCompressedData();
+
+        TurtleInputStream metaInStream = new TurtleInputStream(new ByteArrayInputStream(metadata));
+        Multimap<Byte, TurtleWorldMetadata> metadataValues = MultimapBuilder.hashKeys()
+                                                                .linkedListValues()
+                                                                    .build();
+
+        while(metaInStream.available() > 0) {
+
+            TurtleWorldMetadata metadataValue = TurtleWorldMetadata.loadFromStream(metaInStream);
+            metadataValues.put(metadataValue.getMetaType(), metadataValue);
+
+        }
+
+        metaInStream.close();
+
         TurtleWorldFormat worldFormat =  new TurtleWorldFormat(formatVer, minX, minZ, xWidth, zWidth, chunkMask);
         worldFormat.loadChunksWithData(chunkData);
+        worldFormat.loadMetadata(metadataValues);
 
         return worldFormat;
 
@@ -114,6 +138,10 @@ public class TurtleWorldFormat {
 
     }
 
+    public void loadMetadata(Multimap<Byte, TurtleWorldMetadata> metadata) {
+        _metadata = metadata;
+    }
+
     private void loadChunksFromMap(Map<ChunkCoordIntPair, TurtleWorldChunk> turtleChunks) {
         _chunks = turtleChunks;
     }
@@ -155,6 +183,16 @@ public class TurtleWorldFormat {
         }
 
         outStream.compressAndWrite(byteOutput.toByteArray());
+
+        ByteArrayOutputStream metadataByteStream = new ByteArrayOutputStream();
+        TurtleOutputStream metadataOutputStream = new TurtleOutputStream(metadataByteStream);
+
+        for(TurtleWorldMetadata metadata : _metadata.values())
+            metadata.write(metadataOutputStream);
+
+        metadataOutputStream.close();
+
+        outStream.compressAndWrite(metadataByteStream.toByteArray());
 
         outStream.flush();
         outStream.close();
