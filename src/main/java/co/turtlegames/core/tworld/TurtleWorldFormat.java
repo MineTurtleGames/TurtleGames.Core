@@ -35,7 +35,7 @@ public class TurtleWorldFormat {
 
     private Multimap<Byte, TurtleWorldMetadata> _metadata = MultimapBuilder.hashKeys()
                                                                 .linkedListValues()
-                                                                    .build();;
+                                                                    .build();
 
     public static TurtleWorldFormat loadFromStream(TurtleInputStream stream) throws IOException {
 

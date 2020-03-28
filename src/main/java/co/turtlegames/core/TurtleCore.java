@@ -16,6 +16,7 @@ import co.turtlegames.core.stats.PlayerStatManager;
 import co.turtlegames.core.tab.TabManager;
 import co.turtlegames.core.util.AuthInfo;
 import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -58,7 +59,7 @@ public class TurtleCore extends JavaPlugin {
         this.registerModule(new DirectMessageManager(this));
         this.registerModule(new CurrencyManager(this));
         this.registerModule(new PlayerStatManager(this));
-        this.registerModule(new MetricManager(this)); //46132
+        this.registerModule(new MetricManager(this));
 
         this.registerModule(new TabManager(this));
 
@@ -68,7 +69,6 @@ public class TurtleCore extends JavaPlugin {
             this.<MetricManager>getModule(MetricManager.class).register(new ServerStatusMetric(1));
 
         });
-
 
     }
 
