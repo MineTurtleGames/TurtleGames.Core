@@ -5,6 +5,7 @@ import co.turtlegames.core.util.AuthInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.lokra.seaweedfs.core.FileSource;
 import org.lokra.seaweedfs.core.FileTemplate;
+import org.lokra.seaweedfs.core.http.StreamResponse;
 
 import java.io.*;
 
@@ -94,6 +95,27 @@ public class FileManager extends TurtleModule {
             template.saveFileByStream(name, inStream);
         } catch (IOException ex) {
             ex.printStackTrace();
+        }
+
+    }
+
+    public InputStream getStream(String name) {
+
+        FileTemplate template = new FileTemplate(_source.getConnection());
+
+        try {
+
+            StreamResponse streamResponse = template.getFileStream(name);
+
+            if(streamResponse.getLength() == 0)
+                return null;
+
+            return streamResponse.getInputStream();
+
+        } catch(IOException ex) {
+            ex.printStackTrace();
+            return null;
+
         }
 
     }

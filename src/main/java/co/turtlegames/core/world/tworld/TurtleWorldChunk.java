@@ -43,8 +43,6 @@ public class TurtleWorldChunk {
         BitSet sectionMask = stream.readBitSet(2);
         TurtleWorldSection[] sections = new TurtleWorldSection[SECTIONS_PER_CHUNK];
 
-        System.out.println(coordinate.x + " " + coordinate.z + " in: " + Arrays.toString(IODataUtil.toByteArray(sectionMask, 2)));
-
         for(int yIndex = 0; yIndex < SECTIONS_PER_CHUNK; yIndex++) {
 
             if(!sectionMask.get(yIndex))
