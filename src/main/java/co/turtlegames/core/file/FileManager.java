@@ -52,10 +52,12 @@ public class FileManager extends TurtleModule {
             InputStream inputStream = template.getFileStream(name).getInputStream();
             byte[] buffer = new byte[inputStream.available()];
             inputStream.read(buffer);
+            inputStream.close();
 
             File target = new File(getPlugin().getDataFolder(), name);
             OutputStream outputStream = new FileOutputStream(target);
             outputStream.write(buffer);
+            outputStream.close();
 
             return target;
 
@@ -75,7 +77,9 @@ public class FileManager extends TurtleModule {
         FileTemplate template = new FileTemplate(_source.getConnection());
 
         try {
-            template.saveFileByStream(name, new FileInputStream(file));
+            FileInputStream stream = new FileInputStream(file);
+            template.saveFileByStream(name, stream);
+            stream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
