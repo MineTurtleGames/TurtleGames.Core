@@ -16,6 +16,7 @@ import co.turtlegames.core.scoreboard.TurtleScoreboardManager;
 import co.turtlegames.core.stats.PlayerStatManager;
 import co.turtlegames.core.tab.TabManager;
 import co.turtlegames.core.util.AuthInfo;
+import co.turtlegames.core.world.virtual.VirtualWorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -63,6 +64,8 @@ public class TurtleCore extends JavaPlugin {
         this.registerModule(new MetricManager(this));
         this.registerModule(new FileManager(this));
         this.registerModule(new TabManager(this));
+
+        this.registerModule(new VirtualWorldManager(this));
 
         Bukkit.getScheduler().runTask(this, () -> {
 
