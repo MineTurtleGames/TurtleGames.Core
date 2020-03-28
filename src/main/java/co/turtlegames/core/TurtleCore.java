@@ -5,6 +5,7 @@ import co.turtlegames.core.chat.ChatManager;
 import co.turtlegames.core.chat.dm.DirectMessageManager;
 import co.turtlegames.core.currency.CurrencyManager;
 import co.turtlegames.core.db.DatabaseConnector;
+import co.turtlegames.core.file.FileManager;
 import co.turtlegames.core.infraction.InfractionManager;
 import co.turtlegames.core.metrics.Metric;
 import co.turtlegames.core.metrics.MetricManager;
@@ -60,7 +61,7 @@ public class TurtleCore extends JavaPlugin {
         this.registerModule(new CurrencyManager(this));
         this.registerModule(new PlayerStatManager(this));
         this.registerModule(new MetricManager(this));
-
+        this.registerModule(new FileManager(this));
         this.registerModule(new TabManager(this));
 
         Bukkit.getScheduler().runTask(this, () -> {
