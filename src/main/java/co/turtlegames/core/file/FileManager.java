@@ -86,4 +86,16 @@ public class FileManager extends TurtleModule {
 
     }
 
+    public void saveStream(String name, InputStream inStream) {
+
+        FileTemplate template = new FileTemplate(_source.getConnection());
+
+        try {
+            template.saveFileByStream(name, inStream);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
 }

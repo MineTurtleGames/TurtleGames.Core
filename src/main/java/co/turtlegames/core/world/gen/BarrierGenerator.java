@@ -6,11 +6,17 @@ import org.bukkit.generator.ChunkGenerator;
 
 import java.util.Random;
 
-public class VoidGenerator extends ChunkGenerator {
+public class BarrierGenerator extends ChunkGenerator {
 
     @Override
     public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biome) {
-        return this.createChunkData(world);
+
+        ChunkData data = this.createChunkData(world);
+
+        data.setRegion(0, 0, 0, 16, 256, 16, Material.BARRIER);
+
+        return data;
+
     }
 
 }

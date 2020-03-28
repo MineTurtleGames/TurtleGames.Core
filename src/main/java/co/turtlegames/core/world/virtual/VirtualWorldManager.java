@@ -1,7 +1,7 @@
 package co.turtlegames.core.world.virtual;
 
 import co.turtlegames.core.TurtleModule;
-import co.turtlegames.core.world.gen.VoidGenerator;
+import co.turtlegames.core.world.gen.BarrierGenerator;
 import net.minecraft.server.v1_8_R3.*;
 import net.minecraft.server.v1_8_R3.WorldType;
 import org.bukkit.*;
@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 public class VirtualWorldManager extends TurtleModule {
 
+    private int _curDimensionId = 100;
     private Map<String, World> _virtualWorlds;
 
     public VirtualWorldManager(JavaPlugin pluginInstance) {
@@ -47,7 +48,7 @@ public class VirtualWorldManager extends TurtleModule {
     public World createVirtualWorld(String name, IChunkLoader chunkLoader) {
 
         WorldCreator creator = new WorldCreator(name)
-                                    .generator(new VoidGenerator());
+                                    .generator(new BarrierGenerator());
 
         return this.createVirtualWorld(creator, chunkLoader);
 
@@ -69,11 +70,13 @@ public class VirtualWorldManager extends TurtleModule {
 
         WorldData worldData = new WorldData(new WorldSettings(0, WorldSettings.EnumGamemode.SURVIVAL, false, false, WorldType.NORMAL), creator.name());
 
-        WorldServer internal = (WorldServer) new WorldServer(minecraftServer, serverNBTManager, worldData, 19, minecraftServer.methodProfiler, creator.environment(), generator).b();
+        WorldServer internal = (WorldServer) new WorldServer(minecraftServer, serverNBTManager, worldData, _curDimensionId, minecraftServer.methodProfiler, creator.environment(), generator).b();
+        _curDimensionId++;
 
         internal.scoreboard = craftServer.getScoreboardManager()
                                             .getMainScoreboard()
                                                 .getHandle();
+
         internal.tracker = new EntityTracker(internal);
         internal.addIWorldAccess(new WorldManager(minecraftServer, internal));
         internal.worldData.setDifficulty(EnumDifficulty.EASY);

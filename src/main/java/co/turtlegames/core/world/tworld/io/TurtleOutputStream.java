@@ -1,6 +1,6 @@
 package co.turtlegames.core.world.tworld.io;
 
-import co.turtlegames.tworld.util.IODataUtil;
+import co.turtlegames.core.world.tworld.util.IODataUtil;
 import com.github.luben.zstd.Zstd;
 import net.minecraft.server.v1_8_R3.NibbleArray;
 
