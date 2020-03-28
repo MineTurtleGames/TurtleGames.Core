@@ -1,7 +1,7 @@
-package co.turtlegames.core.tworld;
+package co.turtlegames.core.world.tworld;
 
-import co.turtlegames.core.tworld.io.TurtleInputStream;
-import co.turtlegames.core.tworld.io.TurtleOutputStream;
+import co.turtlegames.core.world.tworld.io.TurtleInputStream;
+import co.turtlegames.core.world.tworld.io.TurtleOutputStream;
 import co.turtlegames.tworld.util.IODataUtil;
 import net.minecraft.server.v1_8_R3.ChunkSection;
 import net.minecraft.server.v1_8_R3.NibbleArray;

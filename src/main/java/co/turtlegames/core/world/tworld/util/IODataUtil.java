@@ -1,4 +1,4 @@
-package co.turtlegames.core.tworld.util;
+package co.turtlegames.core.world.tworld.util;
 
 import net.minecraft.server.v1_8_R3.NibbleArray;
 

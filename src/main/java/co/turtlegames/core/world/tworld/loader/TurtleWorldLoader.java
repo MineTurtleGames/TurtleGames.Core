@@ -1,7 +1,7 @@
-package co.turtlegames.core.tworld.loader;
+package co.turtlegames.core.world.tworld.loader;
 
-import co.turtlegames.core.tworld.TurtleWorldChunk;
-import co.turtlegames.core.tworld.TurtleWorldFormat;
+import co.turtlegames.core.world.tworld.TurtleWorldChunk;
+import co.turtlegames.core.world.tworld.TurtleWorldFormat;
 import net.minecraft.server.v1_8_R3.Chunk;
 import net.minecraft.server.v1_8_R3.ExceptionWorldConflict;
 import net.minecraft.server.v1_8_R3.IChunkLoader;

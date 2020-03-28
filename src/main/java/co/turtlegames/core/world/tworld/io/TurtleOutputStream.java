@@ -1,4 +1,4 @@
-package co.turtlegames.core.tworld.io;
+package co.turtlegames.core.world.tworld.io;
 
 import co.turtlegames.tworld.util.IODataUtil;
 import com.github.luben.zstd.Zstd;

@@ -1,16 +1,13 @@
-package co.turtlegames.core.tworld;
+package co.turtlegames.core.world.tworld;
 
-import co.turtlegames.core.tworld.io.TurtleInputStream;
-import co.turtlegames.core.tworld.io.TurtleOutputStream;
-import co.turtlegames.core.tworld.loader.TurtleWorldLoader;
+import co.turtlegames.core.world.tworld.io.TurtleInputStream;
+import co.turtlegames.core.world.tworld.io.TurtleOutputStream;
+import co.turtlegames.core.world.tworld.loader.TurtleWorldLoader;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import net.minecraft.server.v1_8_R3.ChunkCoordIntPair;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
-import org.bukkit.util.Vector;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
