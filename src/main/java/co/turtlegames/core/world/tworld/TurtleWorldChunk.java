@@ -97,8 +97,6 @@ public class TurtleWorldChunk {
 
         stream.writeBitSet(_sectionMask, SECTIONS_PER_CHUNK/8);
 
-        System.out.println(_coordinate.x + " " + _coordinate.z + " out: " + Arrays.toString(IODataUtil.toByteArray(_sectionMask, 2)));
-
         for(int yIndex = 0; yIndex < SECTIONS_PER_CHUNK; yIndex ++) {
 
             if(!_sectionMask.get(yIndex))

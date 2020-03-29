@@ -25,6 +25,17 @@ public class TurtleInputStream extends DataInputStream  {
 
     }
 
+    public String readChars(int length) throws IOException {
+
+        char[] chars = new char[length];
+
+        for(int i = 0; i < length; i++)
+            chars[i] = this.readChar();
+
+        return new String(chars);
+
+    }
+
     public int[] readIntArray(int length) throws IOException {
 
         int[] array = new int[length];
@@ -40,6 +51,9 @@ public class TurtleInputStream extends DataInputStream  {
 
         int compLength = this.readInt();
         int uncompLength = this.readInt();
+
+        System.out.println("Reading compressed data Length: " + compLength);
+        System.out.println("Uncompressed length: " + uncompLength);
 
         byte[] compressedData = this.readByteArray(compLength);
         byte[] uncompressedData = Zstd.decompress(compressedData, uncompLength);

@@ -7,7 +7,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import net.minecraft.server.v1_8_R3.ChunkCoordIntPair;
 import org.bukkit.Chunk;
-import org.bukkit.World;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,8 +15,12 @@ import java.util.*;
 
 public class TurtleWorldFormat {
 
+    private static boolean DEBUG = true;
+
     private static final byte CURRENT_VERSION = 1;
     private static final byte MAGIC_BYTE = (byte) 0x69;
+
+    private byte[] _metadata = new byte[0];
 
     private byte _formatVer;
 
@@ -30,7 +33,7 @@ public class TurtleWorldFormat {
     private BitSet _chunkMask;
     private Map<ChunkCoordIntPair, TurtleWorldChunk> _chunks;
 
-    private Multimap<Byte, TurtleWorldMetadata> _metadata = MultimapBuilder.hashKeys()
+    private Multimap<Byte, TurtleWorldMetaPoint> _metapointData = MultimapBuilder.hashKeys()
                                                                 .linkedListValues()
                                                                     .build();
 
@@ -52,37 +55,36 @@ public class TurtleWorldFormat {
         byte xWidth = stream.readByte();
         byte zWidth = stream.readByte();
 
+        byte[] metadata = stream.readCompressedData();
+
         int maskSize = (int) Math.ceil((xWidth * zWidth)/8);
         BitSet chunkMask = stream.readBitSet(maskSize);
 
         byte[] chunkData = stream.readCompressedData();
+        byte[] metaPointByteData = stream.readCompressedData();
 
-        byte[] metadata = stream.readCompressedData();
-
-        TurtleInputStream metaInStream = new TurtleInputStream(new ByteArrayInputStream(metadata));
-        Multimap<Byte, TurtleWorldMetadata> metadataValues = MultimapBuilder.hashKeys()
+        TurtleInputStream metaPointInStream = new TurtleInputStream(new ByteArrayInputStream(metaPointByteData));
+        Multimap<Byte, TurtleWorldMetaPoint> metadataValues = MultimapBuilder.hashKeys()
                                                                 .linkedListValues()
                                                                     .build();
 
-        while(metaInStream.available() > 0) {
+        while(metaPointInStream.available() > 0) {
 
-            TurtleWorldMetadata metadataValue = TurtleWorldMetadata.loadFromStream(metaInStream);
+            TurtleWorldMetaPoint metadataValue = TurtleWorldMetaPoint.loadFromStream(metaPointInStream);
             metadataValues.put(metadataValue.getMetaType(), metadataValue);
 
         }
 
-        metaInStream.close();
+        metaPointInStream.close();
 
         TurtleWorldFormat worldFormat =  new TurtleWorldFormat(formatVer, minX, minZ, xWidth, zWidth, chunkMask);
+
         worldFormat.loadChunksWithData(chunkData);
-        worldFormat.loadMetadata(metadataValues);
+        worldFormat.loadMetaPoints(metadataValues);
+        worldFormat.loadMetadata(metadata);
 
         return worldFormat;
 
-    }
-
-    public static TurtleWorldFormat loadFromLoadedChunks(World world) throws IOException {
-        return TurtleWorldFormat.loadFromChunks(world.getLoadedChunks());
     }
 
     public static TurtleWorldFormat loadFromChunks(Chunk[] chunks) throws IOException {
@@ -112,8 +114,8 @@ public class TurtleWorldFormat {
 
         }
 
-        byte xSize = (byte) (maxX - minX);
-        byte zSize = (byte) (maxZ - minZ);
+        byte xSize = (byte) (maxX - minX + 1);
+        byte zSize = (byte) (maxZ - minZ + 1);
 
         BitSet chunkMask = new BitSet(xSize * zSize);
 
@@ -135,15 +137,21 @@ public class TurtleWorldFormat {
 
     }
 
-    public void loadMetadata(Multimap<Byte, TurtleWorldMetadata> metadata) {
-        _metadata = metadata;
+    public void loadMetaPoints(Multimap<Byte, TurtleWorldMetaPoint> metaPoints) {
+        _metapointData = metaPoints;
     }
 
     private void loadChunksFromMap(Map<ChunkCoordIntPair, TurtleWorldChunk> turtleChunks) {
         _chunks = turtleChunks;
     }
 
+    private void loadMetadata(byte[] data) {
+        _metadata = data;
+    }
+
     public void write(TurtleOutputStream outStream) throws IOException {
+
+        int prevSize = 0;
 
         outStream.writeByte(MAGIC_BYTE);
         outStream.writeByte(_formatVer);
@@ -153,6 +161,14 @@ public class TurtleWorldFormat {
 
         outStream.writeByte(_xWidth);
         outStream.writeByte(_zWidth);
+
+        System.out.println("Header: " + (outStream.size() - prevSize));
+        prevSize = outStream.size();
+
+        outStream.compressAndWrite(_metadata);
+
+        System.out.println("Metadata: " + (outStream.size() - prevSize));
+        prevSize = outStream.size();
 
         outStream.writeBitSet(_chunkMask, (int) Math.ceil((1.0d * _zWidth * _xWidth/8)));
 
@@ -165,7 +181,6 @@ public class TurtleWorldFormat {
                 continue;
 
             ChunkCoordIntPair coord = this.getChunkCoords(i);
-
             TurtleWorldChunk chunk = _chunks.get(coord);
 
             if(chunk == null) {
@@ -179,17 +194,23 @@ public class TurtleWorldFormat {
 
         }
 
-        outStream.compressAndWrite(byteOutput.toByteArray());
+        byte[] toWriteData = byteOutput.toByteArray();
+        outStream.compressAndWrite(toWriteData);
+
+        System.out.println("Chunk Block Data: " + (outStream.size() - prevSize));
+        prevSize = outStream.size();
 
         ByteArrayOutputStream metadataByteStream = new ByteArrayOutputStream();
         TurtleOutputStream metadataOutputStream = new TurtleOutputStream(metadataByteStream);
 
-        for(TurtleWorldMetadata metadata : _metadata.values())
+        for(TurtleWorldMetaPoint metadata : _metapointData.values())
             metadata.write(metadataOutputStream);
 
         metadataOutputStream.close();
 
         outStream.compressAndWrite(metadataByteStream.toByteArray());
+
+        System.out.println("Metadata: " + (outStream.size() - prevSize));
 
         outStream.flush();
         outStream.close();
@@ -241,6 +262,18 @@ public class TurtleWorldFormat {
 
     private ChunkCoordIntPair getChunkCoords(int bitIndex) {
         return TurtleWorldFormat.getChunkCoords(bitIndex, _xWidth, _minX, _zWidth, _minZ);
+    }
+
+    public byte[] getMetadata() {
+        return _metadata;
+    }
+
+    public void setMetadata(byte[] metadata) {
+        _metadata = metadata;
+    }
+
+    public boolean hasMetadata() {
+        return _metadata.length > 0;
     }
 
     public static byte getCurrentVersion() {

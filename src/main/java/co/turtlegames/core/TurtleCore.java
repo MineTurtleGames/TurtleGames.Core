@@ -5,9 +5,8 @@ import co.turtlegames.core.chat.ChatManager;
 import co.turtlegames.core.chat.dm.DirectMessageManager;
 import co.turtlegames.core.currency.CurrencyManager;
 import co.turtlegames.core.db.DatabaseConnector;
-import co.turtlegames.core.file.FileManager;
+import co.turtlegames.core.file.minio.FileClusterManager;
 import co.turtlegames.core.infraction.InfractionManager;
-import co.turtlegames.core.metrics.Metric;
 import co.turtlegames.core.metrics.MetricManager;
 import co.turtlegames.core.metrics.type.ServerStatusMetric;
 import co.turtlegames.core.profile.ProfileManager;
@@ -18,7 +17,6 @@ import co.turtlegames.core.tab.TabManager;
 import co.turtlegames.core.util.AuthInfo;
 import co.turtlegames.core.world.virtual.VirtualWorldManager;
 import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -62,7 +60,7 @@ public class TurtleCore extends JavaPlugin {
         this.registerModule(new CurrencyManager(this));
         this.registerModule(new PlayerStatManager(this));
         this.registerModule(new MetricManager(this));
-        this.registerModule(new FileManager(this));
+        this.registerModule(new FileClusterManager(this));
         this.registerModule(new TabManager(this));
 
         this.registerModule(new VirtualWorldManager(this));
