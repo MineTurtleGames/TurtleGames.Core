@@ -149,4 +149,23 @@ public class TurtleWorldChunk {
 
     }
 
+    public static net.minecraft.server.v1_8_R3.Chunk emptyChunk(World world, int x, int z) {
+
+        net.minecraft.server.v1_8_R3.Chunk chunk =
+                new net.minecraft.server.v1_8_R3.Chunk(world, x, z);
+
+        chunk.a(new int[256]);
+
+        chunk.d(true);
+        chunk.e(true);
+
+        chunk.c(0);
+
+        chunk.a(new ChunkSection[16]);
+        chunk.a(new byte[256]);
+
+        return chunk;
+
+    }
+
 }

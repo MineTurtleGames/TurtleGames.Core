@@ -1,6 +1,7 @@
 package co.turtlegames.core.command;
 
 import co.turtlegames.core.TurtleModule;
+import co.turtlegames.core.command.sub.SubCommandBase;
 import co.turtlegames.core.common.Chat;
 
 import co.turtlegames.core.profile.PlayerProfile;
@@ -13,9 +14,7 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.concurrent.ExecutionException;
+import java.util.*;
 
 public abstract class CommandBase<ModuleType extends TurtleModule> extends BukkitCommand {
 
@@ -23,6 +22,7 @@ public abstract class CommandBase<ModuleType extends TurtleModule> extends Bukki
 
     private Rank _minRank;
     private HashSet<Rank> _alternateRanks;
+    private Map<String, SubCommandBase<?>> _subCommands;
 
     public CommandBase(ModuleType module, Rank requiredRank, String... aliases) {
 
@@ -31,8 +31,16 @@ public abstract class CommandBase<ModuleType extends TurtleModule> extends Bukki
         _module = module;
         _minRank = requiredRank;
         _alternateRanks = new HashSet<>();
+        _subCommands = new HashMap<>();
 
         setAliases(Arrays.asList(aliases));
+
+    }
+
+    public void addSubCommand(SubCommandBase<?> subCommand) {
+
+        for(String alias : subCommand.getAliases())
+            _subCommands.put(alias.toLowerCase(), subCommand);
 
     }
 
@@ -43,6 +51,19 @@ public abstract class CommandBase<ModuleType extends TurtleModule> extends Bukki
             return true;
 
         Player player = (Player) commandSender;
+
+        if(args.length > 0) {
+
+            SubCommandBase<?> subCommand = _subCommands.get(args[0].toLowerCase());
+
+            if(subCommand != null) {
+
+                subCommand.execute(commandSender, cmd, Arrays.copyOfRange(args, 1, args.length));
+                return true;
+
+            }
+
+        }
 
         ProfileManager profileManager = _module.getModule(ProfileManager.class);
 

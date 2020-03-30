@@ -7,6 +7,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import net.minecraft.server.v1_8_R3.ChunkCoordIntPair;
 import org.bukkit.Chunk;
+import org.bukkit.World;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -177,8 +178,10 @@ public class TurtleWorldFormat {
 
         for(int i = 0; i < _chunkMask.size(); i++) {
 
-            if(!_chunkMask.get(i))
+            if(!_chunkMask.get(i)) {
+                System.out.println("Ignoring chunk " + i + " because of mask");
                 continue;
+            }
 
             ChunkCoordIntPair coord = this.getChunkCoords(i);
             TurtleWorldChunk chunk = _chunks.get(coord);
@@ -304,8 +307,31 @@ public class TurtleWorldFormat {
         return _chunks.get(new ChunkCoordIntPair(x, z));
     }
 
+    public net.minecraft.server.v1_8_R3.Chunk evolveChunk(net.minecraft.server.v1_8_R3.World world, int x, int z) {
+
+        TurtleWorldChunk chunk = this.getChunkAt(x, z);
+
+        if(chunk != null)
+            return chunk.evolve(world);
+
+        if(!this.isWithinMapBounds(x, z))
+            return null;
+
+        return TurtleWorldChunk.emptyChunk(world, x, z);
+
+    }
+
     public TurtleWorldLoader createChunkLoader() {
         return new TurtleWorldLoader(this);
+    }
+
+    public boolean isWithinMapBounds(int x, int z) {
+
+        return _minX <= x
+                && _minX + _xWidth >= x
+             && _minZ <= z
+                && _minZ + _zWidth >= z;
+
     }
 
 }

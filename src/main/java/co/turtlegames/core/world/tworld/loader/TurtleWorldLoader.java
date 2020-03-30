@@ -19,14 +19,7 @@ public class TurtleWorldLoader implements IChunkLoader {
 
     @Override
     public Chunk a(World world, int chunkX, int chunkZ) throws IOException {
-
-        TurtleWorldChunk turtleChunk = _format.getChunkAt(chunkX, chunkZ);
-
-        if(turtleChunk == null)
-            return null;
-
-        return turtleChunk.evolve(world);
-
+        return _format.evolveChunk(world, chunkX, chunkZ);
     }
 
     @Override
