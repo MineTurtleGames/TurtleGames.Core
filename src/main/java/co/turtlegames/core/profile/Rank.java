@@ -7,6 +7,8 @@ public enum Rank {
     PLAYER("Player", ChatColor.WHITE, ""),
     PREMIUM("Premium", ChatColor.YELLOW),
 
+    BUILDER("Builder", ChatColor.BLUE),
+
     JNR_MODERATOR("Jr.Mod", ChatColor.GREEN),
     MODERATOR("Mod", ChatColor.DARK_GREEN),
     SNR_MODERATOR("Sr.Mod", ChatColor.DARK_GREEN),
