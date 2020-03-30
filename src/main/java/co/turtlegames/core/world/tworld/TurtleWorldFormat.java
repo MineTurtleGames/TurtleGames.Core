@@ -58,7 +58,7 @@ public class TurtleWorldFormat {
 
         byte[] metadata = stream.readCompressedData();
 
-        int maskSize = (int) Math.ceil((xWidth * zWidth)/8);
+        int maskSize = (int) Math.ceil((1.0f * xWidth * zWidth)/8);
         BitSet chunkMask = stream.readBitSet(maskSize);
 
         byte[] chunkData = stream.readCompressedData();
@@ -163,15 +163,12 @@ public class TurtleWorldFormat {
         outStream.writeByte(_xWidth);
         outStream.writeByte(_zWidth);
 
-        System.out.println("Header: " + (outStream.size() - prevSize));
-        prevSize = outStream.size();
-
         outStream.compressAndWrite(_metadata);
 
-        System.out.println("Metadata: " + (outStream.size() - prevSize));
         prevSize = outStream.size();
 
-        outStream.writeBitSet(_chunkMask, (int) Math.ceil((1.0d * _zWidth * _xWidth/8)));
+        int d = outStream.size();
+        outStream.writeBitSet(_chunkMask, (int) Math.ceil((1.0f * _zWidth * _xWidth)/8));
 
         ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
         TurtleOutputStream stream = new TurtleOutputStream(byteOutput);
@@ -179,7 +176,6 @@ public class TurtleWorldFormat {
         for(int i = 0; i < _chunkMask.size(); i++) {
 
             if(!_chunkMask.get(i)) {
-                System.out.println("Ignoring chunk " + i + " because of mask");
                 continue;
             }
 
@@ -200,7 +196,6 @@ public class TurtleWorldFormat {
         byte[] toWriteData = byteOutput.toByteArray();
         outStream.compressAndWrite(toWriteData);
 
-        System.out.println("Chunk Block Data: " + (outStream.size() - prevSize));
         prevSize = outStream.size();
 
         ByteArrayOutputStream metadataByteStream = new ByteArrayOutputStream();
@@ -212,8 +207,6 @@ public class TurtleWorldFormat {
         metadataOutputStream.close();
 
         outStream.compressAndWrite(metadataByteStream.toByteArray());
-
-        System.out.println("Metadata: " + (outStream.size() - prevSize));
 
         outStream.flush();
         outStream.close();
@@ -328,10 +321,18 @@ public class TurtleWorldFormat {
     public boolean isWithinMapBounds(int x, int z) {
 
         return _minX <= x
-                && _minX + _xWidth >= x
+                && _minX + _xWidth > x
              && _minZ <= z
-                && _minZ + _zWidth >= z;
+                && _minZ + _zWidth > z;
 
+    }
+
+    public int getMinX() {
+        return _minX;
+    }
+
+    public int getMinZ() {
+        return _minZ;
     }
 
 }

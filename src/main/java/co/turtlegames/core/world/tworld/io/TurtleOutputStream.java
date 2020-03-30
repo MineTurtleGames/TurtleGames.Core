@@ -2,11 +2,13 @@ package co.turtlegames.core.world.tworld.io;
 
 import co.turtlegames.core.world.tworld.util.IODataUtil;
 import com.github.luben.zstd.Zstd;
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 import net.minecraft.server.v1_8_R3.NibbleArray;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.BitSet;
 
 public class TurtleOutputStream extends DataOutputStream {
@@ -44,6 +46,8 @@ public class TurtleOutputStream extends DataOutputStream {
 
         this.writeInt(compressedSize);
         this.writeInt(uncompressedSize);
+
+        System.out.println(Arrays.toString(compressedData));
 
         this.writeByteArray(compressedData);
 

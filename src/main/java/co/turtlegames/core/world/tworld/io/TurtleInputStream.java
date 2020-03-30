@@ -4,6 +4,7 @@ import com.github.luben.zstd.Zstd;
 import net.minecraft.server.v1_8_R3.NibbleArray;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.BitSet;
 
 public class TurtleInputStream extends DataInputStream  {
@@ -19,7 +20,9 @@ public class TurtleInputStream extends DataInputStream  {
     public byte[] readByteArray(int length) throws IOException {
 
         byte[] foundArray = new byte[length];
-        read(foundArray);
+
+        for(int i = 0; i < length; i++)
+            foundArray[i] = this.readByte();
 
         return foundArray;
 
@@ -52,10 +55,13 @@ public class TurtleInputStream extends DataInputStream  {
         int compLength = this.readInt();
         int uncompLength = this.readInt();
 
-        System.out.println("Reading compressed data Length: " + compLength);
-        System.out.println("Uncompressed length: " + uncompLength);
+        System.out.println("Comp size in: " + compLength);
+        System.out.println("Uncomp size in: " + uncompLength);
+
 
         byte[] compressedData = this.readByteArray(compLength);
+        System.out.println(Arrays.toString(compressedData));
+
         byte[] uncompressedData = Zstd.decompress(compressedData, uncompLength);
 
         if(uncompressedData.length != uncompLength)
