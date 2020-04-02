@@ -335,4 +335,12 @@ public class TurtleWorldFormat {
         return _minZ;
     }
 
+    public Multimap<Byte, TurtleWorldMetaPoint> getMetaPoints() {
+        return _metapointData;
+    }
+
+    public void setMetaPoints(Multimap<Byte, TurtleWorldMetaPoint> points) {
+        _metapointData = points;
+    }
+
 }

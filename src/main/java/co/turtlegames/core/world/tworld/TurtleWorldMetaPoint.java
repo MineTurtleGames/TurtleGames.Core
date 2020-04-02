@@ -91,6 +91,24 @@ public class TurtleWorldMetaPoint {
 
     }
 
+    public Vector getPrimaryPosition() {
+
+        if(_primaryVector == null)
+            return null;
+
+        return _primaryVector.clone();
+
+    }
+
+    public Vector getSecondaryPosition() {
+
+        if(_secondaryVector == null)
+            return null;
+
+        return _secondaryVector.clone();
+
+    }
+
     public Byte getMetaType() {
         return _gameId;
     }
