@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class VirtualWorldManager extends TurtleModule {
 
     private int _curDimensionId = 100;
-    private Map<String, World> _virtualWorlds;
+    private Map<String, World> _virtualWorlds = new HashMap<>();
 
     public VirtualWorldManager(JavaPlugin pluginInstance) {
         super(pluginInstance,"Virtual World Manager");
@@ -28,8 +28,6 @@ public class VirtualWorldManager extends TurtleModule {
 
     @Override
     public void initializeModule() {
-
-        _virtualWorlds = new HashMap<>();
 
     }
 
