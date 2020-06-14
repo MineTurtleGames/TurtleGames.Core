@@ -116,6 +116,7 @@ co\turtlegames\core\world\tworld\TurtleWorldMetaPoint$MetadataType.class
 co\turtlegames\core\achievement\AchievementFlagType.class
 co\turtlegames\core\command\sub\SubCommandBase.class
 co\turtlegames\core\currency\CurrencyData.class
+co\turtlegames\core\util\TRegion.class
 co\turtlegames\core\achievement\action\FetchAchievementProgressAction.class
 co\turtlegames\core\metrics\Metric.class
 co\turtlegames\core\infraction\action\RemoveInfractionAction.class

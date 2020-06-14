@@ -44,6 +44,10 @@ public class TRegion {
 
     }
 
+    public Vector getDimensions() {
+        return _secondPosition.clone().subtract(_firstPosition);
+    }
+
     public boolean contains(Block block) {
 
         boolean isInX = block.getX() >= _firstPosition.getBlockX() && block.getX() <= _secondPosition.getBlockX();
@@ -51,6 +55,13 @@ public class TRegion {
         boolean isInZ = block.getZ() >= _firstPosition.getBlockX() && block.getZ() <= _secondPosition.getBlockZ();
 
         return isInX && isInY && isInZ;
+
+    }
+
+    public int getSize() {
+
+        Vector dimensions = this.getDimensions();
+        return dimensions.getBlockX() * dimensions.getBlockY() * dimensions.getBlockZ();
 
     }
 
