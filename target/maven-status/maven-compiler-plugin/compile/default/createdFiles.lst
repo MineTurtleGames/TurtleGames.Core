@@ -114,6 +114,7 @@ co\turtlegames\core\recharge\RechargeToken.class
 co\turtlegames\core\infraction\menu\InfractionPage.class
 co\turtlegames\core\world\tworld\TurtleWorldMetaPoint$MetadataType.class
 co\turtlegames\core\achievement\AchievementFlagType.class
+co\turtlegames\core\command\sub\SubCommandBase.class
 co\turtlegames\core\currency\CurrencyData.class
 co\turtlegames\core\achievement\action\FetchAchievementProgressAction.class
 co\turtlegames\core\metrics\Metric.class

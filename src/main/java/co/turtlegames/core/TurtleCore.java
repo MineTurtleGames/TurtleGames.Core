@@ -59,7 +59,7 @@ public class TurtleCore extends JavaPlugin {
         this.registerModule(new DirectMessageManager(this));
         this.registerModule(new CurrencyManager(this));
         this.registerModule(new PlayerStatManager(this));
-        this.registerModule(new MetricManager(this));
+        // this.registerModule(new MetricManager(this));
         this.registerModule(new FileClusterManager(this));
         this.registerModule(new TabManager(this));
 
