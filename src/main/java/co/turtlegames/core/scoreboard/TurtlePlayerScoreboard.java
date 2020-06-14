@@ -97,10 +97,9 @@ public class TurtlePlayerScoreboard {
     }
 
     public void clearScoreboard() {
+
         for(int i = 0; i <= 15; i++)
             this.setLine(i, null);
-
-        this.setLine(1, "hi");
 
     }
 
@@ -117,6 +116,8 @@ public class TurtlePlayerScoreboard {
                 return;
 
             _playerScoreboard.resetScores(entryName);
+            team.unregister();
+
             return;
 
         }
