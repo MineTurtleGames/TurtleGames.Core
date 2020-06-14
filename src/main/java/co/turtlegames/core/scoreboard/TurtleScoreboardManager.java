@@ -67,8 +67,15 @@ public class TurtleScoreboardManager extends TurtleModule {
     }
 
     public void updateAll() {
+        this.updateAll(false);
+    }
+
+    public void updateAll(boolean doClear) {
 
         for(TurtlePlayerScoreboard scoreboard : _sbMap.values()) {
+
+            if(doClear)
+                scoreboard.clearScoreboard();
 
             if(scoreboard.getView() != _activeView) {
 
