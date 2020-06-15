@@ -29,7 +29,6 @@ public class AchievementManager extends TurtleModule {
     public void initializeModule() {
 
         FetchAchievementDataAction action = new FetchAchievementDataAction(this);
-        Collection<MetaAchievement> fetchedAchievements;
 
         this.getDatabaseConnector().<Collection<MetaAchievement>>executeActionAsync(action)
                 .thenAccept((Collection<MetaAchievement> achievements) -> {
@@ -43,7 +42,6 @@ public class AchievementManager extends TurtleModule {
                 });
 
         this.registerListener(new WelcomeAchievementListener(this));
-
         this.registerCommand(new AchievementCommand(this));
 
     }

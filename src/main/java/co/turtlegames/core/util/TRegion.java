@@ -22,6 +22,22 @@ public class TRegion {
         _firstPosition = firstPosition;
         _secondPosition = secondPosition;
 
+        _firstPosition = new Vector(Math.min(_firstPosition.getBlockX(), _secondPosition.getBlockX()),
+                Math.min(_firstPosition.getBlockY(), _secondPosition.getBlockY()),
+                Math.min(_firstPosition.getBlockZ(), _secondPosition.getBlockZ()));
+
+        _secondPosition = new Vector(Math.max(_firstPosition.getBlockX(), _secondPosition.getBlockX()),
+                Math.max(_firstPosition.getBlockY(), _secondPosition.getBlockY()),
+                Math.max(_firstPosition.getBlockZ(), _secondPosition.getBlockZ()));
+
+    }
+
+    public Vector getMinimumPosition() {
+        return _firstPosition;
+    }
+
+    public Vector getMaximumPosition() {
+        return _secondPosition;
     }
 
     public TRegion(World world, TurtleWorldMetaPoint metaPoint) {
@@ -34,7 +50,7 @@ public class TRegion {
 
         for (int x = _firstPosition.getBlockX(); x <= _secondPosition.getBlockX(); x++) {
             for (int y = _firstPosition.getBlockY(); y <= _secondPosition.getBlockY(); y++) {
-                for (int z = _firstPosition.getBlockZ(); z <= _secondPosition.getBlockX(); z++) {
+                for (int z = _firstPosition.getBlockZ(); z <= _secondPosition.getBlockZ(); z++) {
                     blocks.add(new Location(Bukkit.getWorld(_world), x, y, z).getBlock());
                 }
             }
@@ -63,6 +79,16 @@ public class TRegion {
         Vector dimensions = this.getDimensions();
         return dimensions.getBlockX() * dimensions.getBlockY() * dimensions.getBlockZ();
 
+    }
+
+    @Override
+    public String toString() {
+
+        Vector min = this.getMinimumPosition();
+        Vector max = this.getMaximumPosition();
+
+        return "{ size: " + this.getSize() + " - " + min.getBlockX() + "," + min.getBlockY() + "," + min.getBlockZ()
+                + " to " + max.getBlockX() + "," + max.getBlockY() + "," + max.getBlockZ() + "}";
     }
 
 }

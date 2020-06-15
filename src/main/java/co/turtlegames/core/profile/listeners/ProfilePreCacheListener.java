@@ -34,7 +34,7 @@ public class ProfilePreCacheListener implements Listener {
         PlayerProfile profile;
         try {
 
-            profile = profileFuture.get();
+            profile = profileFuture.get(5, TimeUnit.SECONDS);
             profile.fetchInfractionData().get(5, TimeUnit.SECONDS);
 
         } catch(InterruptedException | ExecutionException | TimeoutException ex) {

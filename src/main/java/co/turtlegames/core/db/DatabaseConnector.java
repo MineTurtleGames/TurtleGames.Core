@@ -9,12 +9,15 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class DatabaseConnector {
 
     private JavaPlugin _pluginInstance;
 
     private HikariDataSource _conPool;
+    private Executor _defaultExecutor;
 
     public DatabaseConnector(JavaPlugin pluginInstance, Properties poolProperties) {
 
@@ -27,6 +30,8 @@ public class DatabaseConnector {
         _conPool.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
 
         _conPool.setDataSourceProperties(poolProperties);
+
+        _defaultExecutor = Executors.newCachedThreadPool();
 
     }
 
@@ -97,11 +102,7 @@ public class DatabaseConnector {
 
         };
 
-        Thread thread = new Thread(dbRunnable);
-        thread.setName("TurtleCore DB Executor Thread - " + UUID.randomUUID());
-
-        thread.start();
-
+        _defaultExecutor.execute(dbRunnable);
         return toComplete;
 
     }

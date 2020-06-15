@@ -68,7 +68,7 @@ public class TurtleCore extends JavaPlugin {
         Bukkit.getScheduler().runTask(this, () -> {
 
             this.initializeModules();
-            this.<MetricManager>getModule(MetricManager.class).register(new ServerStatusMetric(1));
+            //this.<MetricManager>getModule(MetricManager.class).register(new ServerStatusMetric(1));
 
         });
 
@@ -77,7 +77,7 @@ public class TurtleCore extends JavaPlugin {
     @Override
     public void onDisable() {
 
-        this.<MetricManager>getModule(MetricManager.class).register(new ServerStatusMetric(-1));
+        //this.<MetricManager>getModule(MetricManager.class).register(new ServerStatusMetric(-1));
 
         _connector.deinitialize();
 

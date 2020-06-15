@@ -113,4 +113,18 @@ public class TurtleWorldMetaPoint {
         return _gameId;
     }
 
+
+    @Override
+    public String toString() {
+
+        Vector min = _primaryVector;
+        Vector max = _secondaryVector;
+
+        if(max == null)
+            return "{ " + min.getBlockY() + "," + min.getBlockY() + "," + min.getBlockZ() + " }";
+
+        return "{ " + min.getBlockX() + "," + min.getBlockY() + "," + min.getBlockZ()
+                + " to " + max.getBlockX() + "," + max.getBlockY() + "," + max.getBlockZ() + "}";
+    }
+
 }
