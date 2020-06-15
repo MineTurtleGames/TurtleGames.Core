@@ -55,13 +55,7 @@ public class TurtleInputStream extends DataInputStream  {
         int compLength = this.readInt();
         int uncompLength = this.readInt();
 
-        System.out.println("Comp size in: " + compLength);
-        System.out.println("Uncomp size in: " + uncompLength);
-
-
         byte[] compressedData = this.readByteArray(compLength);
-        System.out.println(Arrays.toString(compressedData));
-
         byte[] uncompressedData = Zstd.decompress(compressedData, uncompLength);
 
         if(uncompressedData.length != uncompLength)
