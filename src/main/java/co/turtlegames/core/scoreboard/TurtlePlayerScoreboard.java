@@ -1,6 +1,5 @@
 package co.turtlegames.core.scoreboard;
 
-import co.turtlegames.core.common.Chat;
 import co.turtlegames.core.profile.PlayerProfile;
 import co.turtlegames.core.profile.ProfileManager;
 import co.turtlegames.core.profile.Rank;
@@ -11,13 +10,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
-import javax.swing.*;
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 
 public class TurtlePlayerScoreboard {
 
@@ -89,7 +83,11 @@ public class TurtlePlayerScoreboard {
             if(profile == null || profile == ProfileManager.LOADING)
                 return;
 
-            team.setPrefix(profile.getRank().getTag() + ChatColor.GRAY + (profile.getRank() != Rank.PLAYER ? " " : ""));
+            CoreNameColourEvent nameColourEvent = new CoreNameColourEvent(profile);
+            Bukkit.getPluginManager().callEvent(nameColourEvent);
+
+            team.setPrefix(profile.getRank().getTag() + nameColourEvent.getNameColour() + (profile.getRank() != Rank.PLAYER ? " " : ""));
+
             team.setNameTagVisibility(NameTagVisibility.ALWAYS);
 
         });
