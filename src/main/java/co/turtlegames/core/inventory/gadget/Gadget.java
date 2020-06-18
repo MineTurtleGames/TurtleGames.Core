@@ -59,8 +59,8 @@ public abstract class Gadget extends AbstractItem implements IItemConsumable, II
         _quantity += _purchaseQuantity;
     }
 
-    public void loadFrom(String data) {
-        _quantity = Integer.parseInt(data.split(":")[1]);
+    public void loadFrom(Map<String, String> data) {
+        _quantity = Integer.parseInt(data.get("quantity"));
     }
 
     public Map<String, Object> serialize() {

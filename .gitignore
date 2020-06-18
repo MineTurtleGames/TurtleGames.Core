@@ -2,3 +2,4 @@
 *.iml
 target/
 pom.xml
+target/Core-1.0-SNAPSHOT-jar-with-dependencies.jar
