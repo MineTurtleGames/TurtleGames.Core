@@ -15,6 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class FetchInventoryDataAction implements IDatabaseAction<InventoryData> {
@@ -53,7 +54,19 @@ public class FetchInventoryDataAction implements IDatabaseAction<InventoryData> 
                 item.setId(rs.getInt("id"));
 
                 if (item instanceof IItemMetaData) {
-                    ((IItemMetaData) item).loadFrom(rs.getString("data"));
+
+                    String dataString = rs.getString("data");
+                    HashMap<String, String> data = new HashMap<>();
+
+                    for (String element : dataString.split(";")) {
+
+                        String[] parts = element.split("=");
+                        data.put(parts[0], parts[1]);
+
+                    }
+
+                    ((IItemMetaData) item).loadFrom(data);
+
                 }
 
                 items.add(item);

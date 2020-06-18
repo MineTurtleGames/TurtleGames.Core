@@ -1,8 +1,10 @@
 package co.turtlegames.core.inventory;
 
+import java.util.Map;
+
 public interface IItemMetaData {
 
-    public String serialize();
-    public void loadFrom(String data);
+    public Map<String, Object> serialize();
+    public void loadFrom(Map<String, String> data);
 
 }
