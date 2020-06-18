@@ -7,6 +7,7 @@ import co.turtlegames.core.currency.CurrencyManager;
 import co.turtlegames.core.db.DatabaseConnector;
 import co.turtlegames.core.file.minio.FileClusterManager;
 import co.turtlegames.core.infraction.InfractionManager;
+import co.turtlegames.core.inventory.InventoryManager;
 import co.turtlegames.core.metrics.MetricManager;
 import co.turtlegames.core.metrics.type.ServerStatusMetric;
 import co.turtlegames.core.profile.ProfileManager;
@@ -53,6 +54,7 @@ public class TurtleCore extends JavaPlugin {
         this.registerModule(new ProfileManager(this));
         this.registerModule(new ChatManager(this));
         this.registerModule(new InfractionManager(this));
+        this.registerModule(new InventoryManager(this));
         this.registerModule(new RechargeManager(this));
         this.registerModule(new TurtleScoreboardManager(this));
         this.registerModule(new AchievementManager(this));

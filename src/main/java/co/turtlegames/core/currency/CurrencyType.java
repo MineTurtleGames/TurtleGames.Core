@@ -2,7 +2,8 @@ package co.turtlegames.core.currency;
 
 public enum CurrencyType {
 
-    COINS("Coin", "Coins", 200);
+    COINS("Coin", "Coins", 200),
+    TOKENS("Token", "Tokens", 500);
 
     private String _name;
     private String _singularName;

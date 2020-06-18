@@ -7,6 +7,8 @@ import co.turtlegames.core.currency.CurrencyManager;
 import co.turtlegames.core.currency.CurrencyType;
 import co.turtlegames.core.infraction.InfractionData;
 import co.turtlegames.core.infraction.InfractionManager;
+import co.turtlegames.core.inventory.InventoryData;
+import co.turtlegames.core.inventory.InventoryManager;
 import co.turtlegames.core.profile.action.AddXpAction;
 import co.turtlegames.core.profile.action.FetchPlayerDataAction;
 import co.turtlegames.core.profile.action.UpdateProfileRankAction;
@@ -32,6 +34,7 @@ public class PlayerProfile {
     private AchievementData _achievementData = null;
     private CurrencyData _currencyData = null;
     private PlayerStatData _statData = null;
+    private InventoryData _inventoryData = null;
 
     public PlayerProfile(ProfileManager profileManager, FetchPlayerDataAction.PlayerData data) {
 
@@ -105,6 +108,42 @@ public class PlayerProfile {
 
             _currencyData = currencyData;
             future.complete(currencyData);
+
+        });
+
+        return future;
+
+    }
+
+    public InventoryData getInventoryData() {
+        return _inventoryData;
+    }
+
+    public CompletableFuture<InventoryData> fetchInventoryData() {
+
+        CompletableFuture<InventoryData> future = new CompletableFuture<>();
+
+        if (_inventoryData != null) {
+
+            future.complete(_inventoryData);
+            return future;
+        }
+
+        InventoryManager inventoryManager = _profileManager.getModule(InventoryManager.class);
+
+        CompletableFuture<InventoryData> dataFuture = inventoryManager.fetchInventoryData(_owner);
+
+        dataFuture.exceptionally((ex) -> {
+
+            future.completeExceptionally(ex);
+            return null;
+
+        });
+
+        dataFuture.thenAccept(inventoryData -> {
+
+            _inventoryData = inventoryData;
+            future.complete(inventoryData);
 
         });
 
