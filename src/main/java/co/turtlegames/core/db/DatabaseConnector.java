@@ -1,5 +1,6 @@
 package co.turtlegames.core.db;
 
+import co.turtlegames.core.util.UtilDev;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -56,24 +57,42 @@ public class DatabaseConnector {
 
         CompletableFuture<I> toComplete = new CompletableFuture<I>();
 
+        long[] timeStamp = new long[5];
+        timeStamp[0] = System.currentTimeMillis();
+
         Runnable dbRunnable = () -> {
+
+            timeStamp[1] = System.currentTimeMillis();
 
             Connection con = null;
 
             try {
 
                 con = _conPool.getConnection();
+                timeStamp[2] = System.currentTimeMillis();
 
                 I response = action.executeAction(con);
+
+                timeStamp[3] = System.currentTimeMillis();
 
                 con.close();
                 con = null;
 
-                if(preserveAsync)
+                if(preserveAsync) {
+
                     toComplete.complete(response);
-                else
+                    timeStamp[4] = System.currentTimeMillis();
+
+                    this.handleTimestamp(timeStamp);
+
+                } else
                     Bukkit.getScheduler().runTask(_pluginInstance, () -> {
+
                         toComplete.complete(response);
+                        timeStamp[4] = System.currentTimeMillis();
+
+                        this.handleTimestamp(timeStamp);
+
                     });
 
             } catch(SQLException | DatabaseException ex) {
@@ -109,6 +128,25 @@ public class DatabaseConnector {
 
     public <I> CompletableFuture<I> executeActionAsync(IDatabaseAction<I> action) {
         return this.executeActionAsync(action, false);
+    }
+
+    private void handleTimestamp(long[] times) {
+
+        long timeToThread = times[1] - times[0];
+        long timeToCon = times[2] - times[1];
+        long timeToExecute = times[3] - times[2];
+
+        long timeToReturn = times[4] - times[3];
+
+        if(timeToThread > 3000)
+            UtilDev.alert(UtilDev.AlertLevel.WARN, "DatabaseConnector took a long time (" + timeToThread + "ms) to pull thread from thread pool");
+        if(timeToCon > 3000)
+            UtilDev.alert(UtilDev.AlertLevel.WARN, "DatabaseConnector took a long time (" + timeToCon + "ms) to pull connection from hikaricp");
+        if(timeToExecute > 3000)
+            UtilDev.alert(UtilDev.AlertLevel.WARN, "DatabaseConnector took a long time (" + timeToExecute + "ms) to execute db action");
+        if(timeToReturn > 3000)
+            UtilDev.alert(UtilDev.AlertLevel.WARN, "DatabaseConnector took a long time (" + timeToReturn + "ms) to fork main thread");
+
     }
 
 
