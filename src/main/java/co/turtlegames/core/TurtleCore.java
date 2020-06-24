@@ -15,6 +15,7 @@ import co.turtlegames.core.recharge.RechargeManager;
 import co.turtlegames.core.scoreboard.TurtleScoreboardManager;
 import co.turtlegames.core.stats.PlayerStatManager;
 import co.turtlegames.core.tab.TabManager;
+import co.turtlegames.core.updater.UpdateEventManager;
 import co.turtlegames.core.util.AuthInfo;
 import co.turtlegames.core.world.virtual.VirtualWorldManager;
 import org.bukkit.Bukkit;
@@ -52,6 +53,7 @@ public class TurtleCore extends JavaPlugin {
         _registeredModules = new HashMap<>();
 
         this.registerModule(new ProfileManager(this));
+        this.registerModule(new UpdateEventManager(this));
         this.registerModule(new ChatManager(this));
         this.registerModule(new InfractionManager(this));
         this.registerModule(new InventoryManager(this));
