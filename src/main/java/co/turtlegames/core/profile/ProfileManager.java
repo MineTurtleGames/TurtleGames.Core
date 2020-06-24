@@ -3,15 +3,10 @@ package co.turtlegames.core.profile;
 import co.turtlegames.core.TurtleCore;
 import co.turtlegames.core.TurtleModule;
 import co.turtlegames.core.db.DatabaseConnector;
-import co.turtlegames.core.db.DatabaseException;
-import co.turtlegames.core.profile.action.CreatePlayerDataAction;
-import co.turtlegames.core.profile.action.FetchPlayerDataAction;
 import co.turtlegames.core.profile.command.SetRankCommand;
 import co.turtlegames.core.profile.listeners.ProfilePreCacheListener;
 import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;

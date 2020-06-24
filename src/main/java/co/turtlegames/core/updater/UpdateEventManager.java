@@ -12,8 +12,6 @@ public class UpdateEventManager extends TurtleModule {
     @Override
     public void initializeModule() {
 
-        registerListener(new TestListener());
-
         getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(getPlugin(), new Runnable() {
 
             private int i = 0;
@@ -28,6 +26,8 @@ public class UpdateEventManager extends TurtleModule {
 
                 if (i % 1200 == 0)
                     callUpdateEvent(UpdateType.MINUTE);
+
+                i++;
 
             }
 
