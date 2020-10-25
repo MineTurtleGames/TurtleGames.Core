@@ -25,7 +25,6 @@ public class ProfileManager extends TurtleModule {
         super(pluginInstance, "Profile Manager");
 
         _profileCache = Caffeine.newBuilder()
-                            .expireAfterWrite(1, TimeUnit.MINUTES)
                             .expireAfterAccess(15, TimeUnit.MINUTES)
                                 .buildAsync(new PlayerProfileLoader(this));
 
