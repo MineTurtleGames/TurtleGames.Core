@@ -15,6 +15,7 @@ import co.turtlegames.core.recharge.RechargeManager;
 import co.turtlegames.core.scoreboard.TurtleScoreboardManager;
 import co.turtlegames.core.stats.PlayerStatManager;
 import co.turtlegames.core.tab.TabManager;
+import co.turtlegames.core.teleport.TeleportManager;
 import co.turtlegames.core.updater.UpdateEventManager;
 import co.turtlegames.core.util.AuthInfo;
 import co.turtlegames.core.world.virtual.VirtualWorldManager;
@@ -66,6 +67,7 @@ public class TurtleCore extends JavaPlugin {
         // this.registerModule(new MetricManager(this));
         this.registerModule(new FileClusterManager(this));
         this.registerModule(new TabManager(this));
+        this.registerModule(new TeleportManager(this));
 
         this.registerModule(new VirtualWorldManager(this));
 

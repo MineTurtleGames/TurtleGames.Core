@@ -167,7 +167,6 @@ public class PlayerProfile {
         }
 
         InfractionManager infractionManager = _profileManager.getModule(InfractionManager.class);
-
         CompletableFuture<InfractionData> dataFuture = infractionManager.fetchInfractionData(_owner);
 
         dataFuture.exceptionally((Throwable ex) -> {
@@ -249,6 +248,8 @@ public class PlayerProfile {
         });
 
         addFuture.exceptionally((Throwable ex) -> {
+
+            ex.printStackTrace();
 
             future.completeExceptionally(ex);
             return null;

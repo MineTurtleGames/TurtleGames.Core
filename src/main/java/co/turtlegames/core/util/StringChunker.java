@@ -8,25 +8,39 @@ public class StringChunker {
 
     public static String[] chunk(String str, int chunkSize) {
 
-        int numberOfChunks = (int) Math.ceil((str.length() * 1.0f)/chunkSize);
-        String[] chunks = new String[numberOfChunks];
+        if(str.length() == 0)
+            return new String[] { "" };
 
-        String lastColours = "";
-        for(int i = 0; i < numberOfChunks; i++) {
+        String[] split = new String[(str.length() / chunkSize) + 1];
 
-            int maxIndex = Math.min(str.length(), chunkSize * (i + 1));
-            String chunk = lastColours + str.substring(i * chunkSize, maxIndex);
+        String toAppend = "";
+        int cursor = 0;
+        int i = 0;
 
-            if(chunk.length() > chunkSize)
-                chunk = chunk.substring(0, chunkSize);
+        while(cursor < str.length()) {
 
-            lastColours = ChatColor.getLastColors(chunk);
+            int endIndex = Math.min(cursor + (chunkSize - toAppend.length()), str.length());
+            String chunk = toAppend + str.substring(cursor, endIndex);
 
-            chunks[i] = chunk;
+            toAppend = ChatColor.getLastColors(chunk);
+
+            if(chunk.endsWith(ChatColor.COLOR_CHAR + "")) {
+
+                toAppend += ChatColor.COLOR_CHAR;
+                chunk = chunk.substring(0, chunk.length() - 1);
+
+                cursor++;
+
+            }
+
+            split[i] = chunk;
+            i++;
+
+            cursor += chunk.length();
 
         }
 
-        return chunks;
+        return split;
 
     }
 

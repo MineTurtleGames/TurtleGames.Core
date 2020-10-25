@@ -29,9 +29,6 @@ public class UtilXp {
 
         ChatColor color = ChatColor.DARK_GRAY;
 
-        if(level > 50)
-            return ChatColor.DARK_GRAY + "[" + ChatColor.RED + level + ChatColor.DARK_GRAY + "]";
-
         if(level < 5) {
             color = ChatColor.DARK_GRAY;
         } else if(level < 10) {
@@ -46,6 +43,8 @@ public class UtilXp {
             color = ChatColor.RED;
         } else if(level == 50) {
             color = ChatColor.DARK_RED;
+        } else {
+            return ChatColor.DARK_GRAY + "[" + ChatColor.RED + level + ChatColor.DARK_GRAY + "]";
         }
 
         return color + "[" + level + "]";
@@ -55,7 +54,7 @@ public class UtilXp {
     public static String drawXpBar(long xp, int length) {
 
         if(xp >= MAX_XP)
-            return ChatColor.GRAY + "[" + ChatColor.YELLOW + Strings.repeat("|", length) + ChatColor.GRAY + "]";
+            return ChatColor.GRAY + "[" + ChatColor.YELLOW + Strings.repeat("ǁ", length) + ChatColor.GRAY + "]";
 
         int currentLevel = UtilXp.getLevel(xp);
 

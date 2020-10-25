@@ -8,6 +8,7 @@ import co.turtlegames.core.profile.PlayerProfile;
 import co.turtlegames.core.profile.ProfileManager;
 import co.turtlegames.core.profile.Rank;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
@@ -44,6 +45,10 @@ public abstract class CommandBase<ModuleType extends TurtleModule> extends Bukki
 
     }
 
+    public void showHelp(Player player) {
+
+    }
+
     @Override
     public boolean execute(CommandSender commandSender, String cmd, String[] args) {
 
@@ -52,17 +57,21 @@ public abstract class CommandBase<ModuleType extends TurtleModule> extends Bukki
 
         Player player = (Player) commandSender;
 
-        if(args.length > 0) {
+        if (args.length > 0) {
 
             SubCommandBase<?> subCommand = _subCommands.get(args[0].toLowerCase());
 
-            if(subCommand != null) {
+            if (subCommand != null) {
 
                 subCommand.execute(commandSender, cmd, Arrays.copyOfRange(args, 1, args.length));
                 return true;
 
             }
 
+        } else if (_subCommands.size() > 0) {
+            showHelp(player);
+
+            return true;
         }
 
         ProfileManager profileManager = _module.getModule(ProfileManager.class);
@@ -106,6 +115,16 @@ public abstract class CommandBase<ModuleType extends TurtleModule> extends Bukki
             Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
             commandMapField.setAccessible(true);
             CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
+
+            for (String alias : this.getAliases()) {
+
+                Command vanillaCommand = commandMap.getCommand(alias);
+
+                if (vanillaCommand != null) {
+                    vanillaCommand.unregister(commandMap);
+                }
+
+            }
 
             commandMap.register("TurtleCommand", this);
 

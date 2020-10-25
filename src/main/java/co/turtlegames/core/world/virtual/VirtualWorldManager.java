@@ -66,7 +66,9 @@ public class VirtualWorldManager extends TurtleModule {
 
         MinecraftServer minecraftServer = MinecraftServer.getServer();
 
-        WorldData worldData = new WorldData(new WorldSettings(0, WorldSettings.EnumGamemode.SURVIVAL, false, false, WorldType.NORMAL), creator.name());
+        WorldData worldData = new WorldData(new WorldSettings(_curDimensionId, WorldSettings.EnumGamemode.SURVIVAL, false, false, WorldType.NORMAL), creator.name());
+
+        System.out.println("Creating new virtual world with dimension id " + _curDimensionId);
 
         WorldServer internal = (WorldServer) new WorldServer(minecraftServer, serverNBTManager, worldData, _curDimensionId, minecraftServer.methodProfiler, creator.environment(), generator).b();
         _curDimensionId++;

@@ -134,7 +134,7 @@ public class TurtlePlayerScoreboard {
         if(lineSplit.length > 0)
             team.setPrefix(lineSplit[0]);
 
-        if(lineSplit.length > 1)
+        if(lineSplit.length > 1 && lineSplit[1] != null)
             team.setSuffix(lineSplit[1]);
 
     }

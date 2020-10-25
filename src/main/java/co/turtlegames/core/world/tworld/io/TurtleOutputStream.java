@@ -47,8 +47,6 @@ public class TurtleOutputStream extends DataOutputStream {
         this.writeInt(compressedSize);
         this.writeInt(uncompressedSize);
 
-        System.out.println(Arrays.toString(compressedData));
-
         this.writeByteArray(compressedData);
 
     }

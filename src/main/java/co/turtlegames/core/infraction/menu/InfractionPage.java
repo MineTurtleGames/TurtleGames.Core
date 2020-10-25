@@ -93,6 +93,8 @@ public class InfractionPage extends Page<InfractionMenu> {
 
             getMenu().getModule().registerInfraction(infraction);
 
+
+
         });
 
         getMenu().getModule().getModule(ProfileManager.class).fetchProfile(getMenu().getTarget().getUniqueId()).thenAccept(playerProfile -> {
