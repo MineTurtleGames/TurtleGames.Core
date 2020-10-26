@@ -63,6 +63,30 @@ public abstract class CommandBase<ModuleType extends TurtleModule> extends Bukki
 
             if (subCommand != null) {
 
+                ProfileManager profileManager = _module.getModule(ProfileManager.class);
+
+                profileManager.fetchProfile(player.getUniqueId()).thenAccept(playerProfile -> {
+
+                    boolean canRunCommand = playerProfile.getRank().isPermissible(subCommand.getMinRank())
+                            || subCommand.getAlternateRanks().contains(playerProfile.getRank());
+
+                    if (!canRunCommand) {
+
+                        player.sendMessage(Chat.main(profileManager.getName(),
+                                "You must be permission level " + Chat.elem(_minRank.getName()) + " or higher to execute this command (You are " + playerProfile.getRank().getName() + ")"));
+                        return;
+
+                    }
+
+                    try {
+                        subCommand.executeCommand(playerProfile, args);
+                    } catch(Exception ex) {
+                        ex.printStackTrace();
+                        player.sendMessage(Chat.main("Error", "An error occurred while executing the command"));
+                    }
+
+                });
+
                 subCommand.execute(commandSender, cmd, Arrays.copyOfRange(args, 1, args.length));
                 return true;
 
@@ -78,10 +102,7 @@ public abstract class CommandBase<ModuleType extends TurtleModule> extends Bukki
 
         profileManager.fetchProfile(player.getUniqueId()).thenAccept((playerProfile -> {
 
-            boolean canRunCommand = playerProfile.getRank().isPermissible(_minRank);
-
-            if(!canRunCommand)
-                canRunCommand = _alternateRanks.contains(playerProfile.getRank());
+            boolean canRunCommand = playerProfile.getRank().isPermissible(_minRank) || _alternateRanks.contains(playerProfile.getRank());
 
             if (!canRunCommand) {
 
@@ -132,6 +153,14 @@ public abstract class CommandBase<ModuleType extends TurtleModule> extends Bukki
             e.printStackTrace();
         }
 
+    }
+
+    public Rank getMinRank() {
+        return _minRank;
+    }
+
+    public HashSet<Rank> getAlternateRanks() {
+        return _alternateRanks;
     }
 
 }

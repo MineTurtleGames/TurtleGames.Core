@@ -33,7 +33,7 @@ public class UpdatePlayerCurrencyAction implements IDatabaseAction<Boolean> {
 
         int rowsAffected = statement.executeUpdate();
 
-        return rowsAffected == 1;
+        return rowsAffected >= 1; // if 1, row inserted. if 2, row updated.
 
     }
 

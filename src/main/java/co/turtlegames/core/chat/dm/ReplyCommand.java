@@ -49,10 +49,11 @@ public class ReplyCommand extends CommandBase<DirectMessageManager> {
 
         }
 
-        String dmMessage = ChatColor.DARK_GREEN + "[" + ply.getName() + " > " + target.getName() + "]" + ChatColor.GRAY;
+        String dmMessage = ChatColor.DARK_GREEN + "[" + ply.getName() + " > " + target.getName() + "] " + ChatColor.GRAY + message;
         getModule().pushLastMessageSender(target.getUniqueId(), ply.getUniqueId());
 
         target.sendMessage(dmMessage);
+        ply.sendMessage(dmMessage);
 
     }
 

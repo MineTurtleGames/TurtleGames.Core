@@ -16,7 +16,9 @@ public class Chat {
     private static final String CHAT_BODY_COLOR = ChatColor.GREEN.toString();
     private static final String CHAT_ELEMENT_COLOR = ChatColor.GOLD.toString();
 
-    public static String main(String headerName, String body) { return header(headerName) + body(body); }
+    public static String main(String headerName, String body) {
+        return header(headerName) + body(body);
+    }
 
     public static String header(String headerName) {
         return CHAT_HEADER_PREFIX + ">> ";
