@@ -33,7 +33,7 @@ public class FetchPlayerCurrenciesAction implements IDatabaseAction<EnumMap<Curr
 
         while (resultSet.next()) {
 
-            currencies.put(CurrencyType.valueOf(resultSet.getString("currency_type")), resultSet.getInt("balance"));
+            currencies.put(CurrencyType.valueOf(resultSet.getString("type")), resultSet.getInt("balance"));
 
         }
 

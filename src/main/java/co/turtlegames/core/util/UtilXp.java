@@ -10,9 +10,10 @@ public class UtilXp {
 
     private static double FACTOR = (B_CONST * B_CONST)/(A_CONST * A_CONST);
 
+    private static int MAX_LEVEL = 50;
     private static long MAX_XP; static {
 
-        MAX_XP = UtilXp.getXpRequired(50);
+        MAX_XP = UtilXp.getXpRequired(MAX_LEVEL);
         System.out.println("Max XP calculated as " + MAX_XP);
 
     }
@@ -41,8 +42,6 @@ public class UtilXp {
             color = ChatColor.GOLD;
         } else if(level < 50) {
             color = ChatColor.RED;
-        } else if(level == 50) {
-            color = ChatColor.DARK_RED;
         } else {
             return ChatColor.DARK_GRAY + "[" + ChatColor.RED + level + ChatColor.DARK_GRAY + "]";
         }

@@ -43,6 +43,30 @@ public class CurrencyData {
 
     }
 
+    public CompletableFuture<Boolean> updateBalance(CurrencyType type, int deltaBalance) {
+
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+        CompletableFuture<Boolean> updateFuture = _manager.updatePlayerCurrency(_ownerUuid, type, deltaBalance);
+
+        updateFuture.exceptionally(ex -> {
+
+            future.completeExceptionally(ex);
+            return false;
+
+        });
+
+        updateFuture.thenAccept(success -> {
+
+            _balances.put(type, _balances.get(type) + deltaBalance);
+            future.complete(success);
+
+        });
+
+        return future;
+
+    }
+
     public int getBalance(CurrencyType type) {
         return _balances.get(type);
     }

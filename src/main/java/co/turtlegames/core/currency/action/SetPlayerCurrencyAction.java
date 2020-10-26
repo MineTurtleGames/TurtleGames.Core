@@ -23,15 +23,16 @@ public class SetPlayerCurrencyAction implements IDatabaseAction<Boolean> {
 
     public Boolean executeAction(Connection con) throws SQLException, DatabaseException {
 
-        PreparedStatement statement = con.prepareStatement("UPDATE currency SET balance=? WHERE uuid=? AND currency_type=?");
+        PreparedStatement statement = con.prepareStatement("INSERT INTO currency (uuid, type balance) VALUES (?,?,?) ON DUPLICATE KEY UPDATE balance=?");
 
-        statement.setInt(1, _newBalance);
-        statement.setString(2, _uuid.toString());
-        statement.setString(3, _type.toString());
+        statement.setString(1, _uuid.toString());
+        statement.setString(2, _type.toString());
+        statement.setInt(3, _newBalance);
+        statement.setInt(4, _newBalance);
 
         int rowsAffected = statement.executeUpdate();
 
-        return rowsAffected == 1;
+        return rowsAffected >= 1; // if 1, row inserted. if 2, row updated.
 
     }
 

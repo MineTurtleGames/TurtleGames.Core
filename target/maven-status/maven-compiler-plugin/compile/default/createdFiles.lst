@@ -1,5 +1,4 @@
 co\turtlegames\core\common\Pair.class
-co\turtlegames\core\redis\RedisStore.class
 co\turtlegames\core\infraction\action\FetchInfractionDataAction.class
 co\turtlegames\core\infraction\menu\InfractionMenu.class
 co\turtlegames\core\profile\action\FetchPlayerDataAction.class
@@ -9,7 +8,6 @@ co\turtlegames\core\stats\PlayerStatManager.class
 co\turtlegames\core\world\tworld\TurtleWorldChunk.class
 co\turtlegames\core\inventory\action\UpdateItemAction.class
 co\turtlegames\core\profile\action\CreatePlayerDataAction.class
-co\turtlegames\core\redis\RedisManager.class
 co\turtlegames\core\inventory\AbstractItem.class
 co\turtlegames\core\stats\PlayerStat.class
 co\turtlegames\core\achievement\action\IncrementAchievementProgressAction.class
@@ -51,7 +49,6 @@ co\turtlegames\core\inventory\action\RegisterItemAction.class
 co\turtlegames\core\scoreboard\ScoreboardView.class
 co\turtlegames\core\achievement\action\FetchAchievementDataAction.class
 co\turtlegames\core\achievement\unique\type\TestAchievementReward.class
-co\turtlegames\core\redis\IRedisAction.class
 co\turtlegames\core\teleport\TeleportManager.class
 co\turtlegames\core\inventory\IItemPurchasable.class
 co\turtlegames\core\menu\Page.class
@@ -59,7 +56,6 @@ co\turtlegames\core\util\StringChunker.class
 co\turtlegames\core\achievement\listener\WelcomeAchievementListener.class
 co\turtlegames\core\util\Call.class
 co\turtlegames\core\TurtleModule.class
-co\turtlegames\core\metrics\type\ServerStatusMetric.class
 co\turtlegames\core\currency\CurrencyManager.class
 co\turtlegames\core\world\tworld\loader\TurtleWorldLoader.class
 co\turtlegames\core\currency\command\CurrencyCommand.class
@@ -73,7 +69,6 @@ co\turtlegames\core\util\UtilXp.class
 co\turtlegames\core\scoreboard\listeners\ScoreboardPlayerJoinListener.class
 co\turtlegames\core\db\DatabaseConnector.class
 co\turtlegames\core\stats\action\IncrementStatAction.class
-co\turtlegames\core\file\minio\FileClusterManager.class
 co\turtlegames\core\stats\PlayerStatData.class
 co\turtlegames\core\chat\dm\DirectMessageCommand.class
 co\turtlegames\core\profile\PlayerProfileLoader.class
@@ -85,8 +80,10 @@ co\turtlegames\core\achievement\AchievementCategory.class
 co\turtlegames\core\currency\action\FetchPlayerCurrenciesAction.class
 co\turtlegames\core\profile\action\UpdateProfileRankAction.class
 co\turtlegames\core\world\virtual\VirtualWorldManager.class
+co\turtlegames\core\currency\action\UpdatePlayerCurrencyAction.class
 co\turtlegames\core\menu\predefined\ConfirmPageBase$1.class
 co\turtlegames\core\chat\command\SilenceCommand.class
+co\turtlegames\core\chat\dm\ReplyCommand.class
 co\turtlegames\core\profile\Rank.class
 co\turtlegames\core\scoreboard\TurtleScoreboardManager.class
 co\turtlegames\core\infraction\InfractionData.class
@@ -112,13 +109,12 @@ co\turtlegames\core\world\virtual\listeners\WorldUnloadEventListener.class
 co\turtlegames\core\chat\dm\DirectMessageManager.class
 co\turtlegames\core\world\tworld\TurtleReaderUtil$TurtleData.class
 co\turtlegames\core\achievement\MetaAchievement.class
-co\turtlegames\core\currency\action\InsertDefaultBalanceAction.class
+co\turtlegames\core\file\FileClusterManager.class
 co\turtlegames\core\menu\Menu.class
 co\turtlegames\core\recharge\RechargeManager.class
 co\turtlegames\core\db\IDatabaseAction.class
 co\turtlegames\core\util\ItemBuilder.class
 co\turtlegames\core\updater\UpdateEvent.class
-co\turtlegames\core\metrics\MetricManager.class
 co\turtlegames\core\profile\PlayerProfile.class
 co\turtlegames\core\updater\UpdateType.class
 co\turtlegames\core\util\MenuCall$VoidProcedure.class
@@ -142,7 +138,6 @@ co\turtlegames\core\command\sub\SubCommandBase.class
 co\turtlegames\core\currency\CurrencyData.class
 co\turtlegames\core\util\TRegion.class
 co\turtlegames\core\achievement\action\FetchAchievementProgressAction.class
-co\turtlegames\core\metrics\Metric.class
 co\turtlegames\core\infraction\action\RemoveInfractionAction.class
 co\turtlegames\core\util\Call$SingleArgProcedure.class
 co\turtlegames\core\util\UtilString.class

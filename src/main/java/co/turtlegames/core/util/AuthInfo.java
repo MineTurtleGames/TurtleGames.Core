@@ -13,7 +13,4 @@ public class AuthInfo {
     public static final String FILESTORE_ACCESS_KEY = "minioadmin";
     public static final String FILESTORE_SECRET_KEY = "minioadmin";
 
-    public static final String METRIC_DATABASE = "turtle";
-    public static final String METRIC_RETENTION_POLICY = "turtle";
-
 }

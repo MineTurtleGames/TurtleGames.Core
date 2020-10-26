@@ -2,8 +2,8 @@ package co.turtlegames.core.currency;
 
 import co.turtlegames.core.TurtleModule;
 import co.turtlegames.core.currency.action.FetchPlayerCurrenciesAction;
-import co.turtlegames.core.currency.action.InsertDefaultBalanceAction;
 import co.turtlegames.core.currency.action.SetPlayerCurrencyAction;
+import co.turtlegames.core.currency.action.UpdatePlayerCurrencyAction;
 import co.turtlegames.core.currency.command.BalanceCommand;
 import co.turtlegames.core.currency.command.CurrencyCommand;
 import co.turtlegames.core.db.DatabaseConnector;
@@ -15,7 +15,6 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 public class CurrencyManager extends TurtleModule {
 
@@ -50,6 +49,21 @@ public class CurrencyManager extends TurtleModule {
 
     }
 
+    public CompletableFuture<Boolean> updatePlayerCurrency(UUID uuid, CurrencyType type, int deltaBalance) {
+
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+        UpdatePlayerCurrencyAction action = new UpdatePlayerCurrencyAction(uuid, type, deltaBalance);
+
+        CompletableFuture<Boolean> dataFuture = _dbConnector.executeActionAsync(action);
+
+        dataFuture.exceptionally(future::completeExceptionally);
+        dataFuture.thenAccept(future::complete);
+
+        return future;
+
+    }
+
     public CompletableFuture<CurrencyData> fetchPlayerCurrencies(UUID uuid) {
 
         CompletableFuture<CurrencyData> future = new CompletableFuture<>();
@@ -68,19 +82,7 @@ public class CurrencyManager extends TurtleModule {
             for (CurrencyType type : CurrencyType.values()) {
 
                 if (!data.hasBalance(type)) {
-
-                    InsertDefaultBalanceAction insertAction = new InsertDefaultBalanceAction(uuid, type);
-
-                    Boolean insertSuccess = false;
-                    try {
-                        insertSuccess = _dbConnector.executeActionSync(insertAction);
-                    } catch (SQLException | DatabaseException e) {
-                        e.printStackTrace();
-                    }
-
-                    if (insertSuccess)
-                        data.putBalance(type, type.getDefaultBalance());
-
+                    data.putBalance(type, type.getDefaultBalance());
                 }
 
             }

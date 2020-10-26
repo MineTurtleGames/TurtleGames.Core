@@ -24,6 +24,7 @@ public class CurrencyCommand extends CommandBase<CurrencyManager> {
         if (args.length == 0) {
 
             profile.getOwner().sendMessage(Chat.main(getModule().getName(), "/currency set <Player> <Currency> <Amount>"));
+            profile.getOwner().sendMessage(Chat.main(getModule().getName(), "/currency modify <Player> <Currency> <Amount>"));
             return;
 
         }
@@ -42,7 +43,7 @@ public class CurrencyCommand extends CommandBase<CurrencyManager> {
             CurrencyType type;
 
             try {
-                type = CurrencyType.valueOf(args[2]);
+                type = CurrencyType.valueOf(args[2].toUpperCase());
             } catch (IllegalArgumentException ex) {
 
                 profile.getOwner().sendMessage(Chat.main(getModule().getName(), "Please enter a valid currency"));
@@ -71,6 +72,62 @@ public class CurrencyCommand extends CommandBase<CurrencyManager> {
                     if (success) {
 
                         profile.getOwner().sendMessage(Chat.main(getModule().getName(), Chat.elem(target.getName()) + " balance is now " + Chat.elem(type.format(newBalance))));
+
+                    }
+
+                });
+
+            });
+
+        }
+
+        if (args[0].equalsIgnoreCase("modify")) {
+
+            if (args.length != 4) {
+
+                profile.getOwner().sendMessage(Chat.main(getModule().getName(), "/currency modify <Player> <Currency> <Amount>"));
+                return;
+
+            }
+
+            OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+
+            CurrencyType type;
+
+            try {
+                type = CurrencyType.valueOf(args[2].toUpperCase());
+            } catch (IllegalArgumentException ex) {
+
+                profile.getOwner().sendMessage(Chat.main(getModule().getName(), "Please enter a valid currency"));
+                return;
+
+            }
+
+            int newBalance;
+
+            try {
+                newBalance = Integer.parseInt(args[3]);
+            } catch (NumberFormatException ex) {
+
+                profile.getOwner().sendMessage(Chat.main(getModule().getName(), "Please enter a whole number"));
+                return;
+
+            }
+
+            CompletableFuture<CurrencyData> dataFuture = profile.fetchCurrencyData();
+
+            dataFuture.thenAccept(currencyData -> {
+
+                CompletableFuture<Boolean> future = currencyData.updateBalance(type, newBalance);
+                future.thenAccept(success -> {
+
+                    if (success) {
+
+                        profile.getOwner().sendMessage(Chat.main(getModule().getName(), Chat.elem(target.getName()) + " balance is now " + Chat.elem(type.format(newBalance))));
+
+                    } else {
+
+                        profile.getOwner().sendMessage(Chat.main(getModule().getName(), "A server error occurred whilst attempting to update the target player's balance."));
 
                     }
 

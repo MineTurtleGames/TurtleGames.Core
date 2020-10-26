@@ -38,12 +38,13 @@ public class DirectMessageCommand extends CommandBase<DirectMessageManager> {
 
         String dmMessage = ChatColor.DARK_GREEN + "[" + ply.getName() + " > " + target.getName() + "]" + ChatColor.GRAY;
 
-        boolean first = true;
         for(int i = 1; i < args.length; i++)
             dmMessage += " " + args[i];
 
         ply.sendMessage(dmMessage);
         target.sendMessage(dmMessage);
+
+        getModule().pushLastMessageSender(target.getUniqueId(), ply.getUniqueId());
 
         ply.playSound(ply.getLocation(), Sound.CHICKEN_EGG_POP, 1, 1);
         target.playSound(ply.getLocation(), Sound.CHICKEN_EGG_POP, 1, 1);
